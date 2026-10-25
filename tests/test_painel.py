@@ -88,7 +88,7 @@ class Data(unittest.TestCase):
         self.assertIn("<AVALIACAO>\n## Avaliação\nNota 63\n</AVALIACAO>", drafting)
         self.assertIn(f"`{painel.PYTHON} tools/compile_doc.py", drafting)
         self.assertNotIn("{python}", drafting)
-        self.assertEqual(painel.claude_answers(url, self.dir), {"avaliar": "## Avaliação\nNota 63", "redigir": None})
+        self.assertEqual(painel.claude_answers(url, self.dir), {"avaliar": "## Avaliação\nNota 63", "redigir": None, "entrevista": None})
 
     def test_profile_prompt_needs_a_document_and_carries_the_form_as_data(self):
         docs, answers = self.dir / "documents", self.dir / "respostas.json"
