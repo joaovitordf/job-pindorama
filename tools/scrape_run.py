@@ -67,6 +67,8 @@ from posting_signals import LEVELS, analyse, verdict  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 QUERIES = ROOT / ".claude" / "skills" / "job-scraper" / "search-queries.md"
+LOCAL_QUERIES = ROOT / "documents" / "perfil" / "search-queries.md"
+LOCAL_ANSWERS = ROOT / "documents" / "perfil" / "respostas.json"
 SKILLS = ROOT / ".agents" / "skills"
 SEEN = ROOT / "job_scraper" / "seen_jobs.json"
 TRACKER = ROOT / "job_search_tracker.csv"
@@ -102,6 +104,28 @@ def parse_queries(text: str) -> list:
                 continue
             calls.append((priority, m.group(1), args))
     return calls
+
+
+def active_queries_path(path: Path | None = None) -> Path:
+    """Usa o plano de busca privado local se configurado pelo usuário."""
+    if path is not None:
+        return path
+    return LOCAL_QUERIES if LOCAL_QUERIES.exists() else QUERIES
+
+
+def local_target_seniority(path: Path = LOCAL_ANSWERS):
+    """Lê a senioridade do formulário local sem expor o perfil no Git."""
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    values = data.get("senioridade") if isinstance(data, dict) else None
+    if isinstance(values, str):
+        values = [values]
+    if not isinstance(values, list):
+        return None
+    result = [str(value).strip().lower() for value in values if str(value).strip().lower() in LEVELS]
+    return result or None
 
 
 def portal_enabled(skill_dir: Path) -> bool:
@@ -421,8 +445,9 @@ def main(argv=None) -> int:
     s = sub.add_parser("search", help="run the portal searches, deduplicate, flag")
     s.add_argument("--priority", default="1,2,3", help="comma list of priorities to run (default 1,2,3)")
     s.add_argument("--all", action="store_true", help="every priority in the file")
-    s.add_argument("--jobage", type=int, default=14, help="days (default 14), unless the query line sets its own")
+    s.add_argument("--jobage", type=int, default=2, help="days (default 2), unless the query line sets its own")
     s.add_argument("--accept", default=None, help="seniority codes; default: Senioridade-alvo in CLAUDE.md")
+    s.add_argument("--queries", type=Path, default=QUERIES, help="search plan file (default: public template)")
     s.add_argument("--out", type=Path, default=None, help="results file (default: system temp dir; never inside the repo)")
     s.add_argument("--workers", type=int, default=4, help="parallel CLI calls (default 4; keep it low)")
     r = sub.add_parser("record", help="append classified postings to job_scraper/seen_jobs.json")
@@ -454,7 +479,8 @@ def main(argv=None) -> int:
         accept = target_seniority(PROFILE.read_text(encoding="utf-8")) if PROFILE.exists() else None
 
     try:
-        calls = parse_queries(QUERIES.read_text(encoding="utf-8"))
+        queries_file = args.queries or QUERIES
+        calls = parse_queries(queries_file.read_text(encoding="utf-8"))
     except OSError as exc:
         print(f"scrape_run: {exc}", file=sys.stderr)
         return 2
