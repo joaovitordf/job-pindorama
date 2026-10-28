@@ -274,6 +274,45 @@
     display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
   }
   .doc-grid { display: grid; gap: 12px; }
+  /* Mapa & visualização geográfica */
+  .geo-state { stroke: #23324a; stroke-width: 0.7; cursor: pointer; transition: fill 0.25s ease, stroke 0.25s ease, filter 0.25s ease; }
+  .geo-state:hover { stroke: #38bdf8; stroke-width: 1.8; filter: brightness(1.28) drop-shadow(0 0 8px rgba(56, 189, 248, 0.5)); }
+  .geo-state.active { stroke: #ffffff; stroke-width: 2.2; filter: brightness(1.35) drop-shadow(0 0 10px rgba(56, 189, 248, 0.75)); }
+  .geo-state.fit-high { stroke: #34d399; stroke-width: 1.6; filter: drop-shadow(0 0 7px rgba(16, 185, 129, 0.55)); }
+  .geo-state.fit-high:hover { stroke: #6ee7b7; stroke-width: 2.2; filter: brightness(1.3) drop-shadow(0 0 10px rgba(52, 211, 153, 0.75)); }
+  .geo-badge { text-anchor: middle; font-size: 11px; font-weight: 700; fill: #f8fafc; pointer-events: none; user-select: none; font-family: inherit; }
+  .geo-badge-sub { text-anchor: middle; font-size: 9px; font-weight: 600; pointer-events: none; user-select: none; font-family: inherit; }
+  .geo-badge-bg { fill: rgba(15, 23, 42, 0.92); rx: 5px; stroke: rgba(51, 65, 85, 0.9); stroke-width: 0.9px; }
+  .geo-badge-bg.fit-high { stroke: #10b981; stroke-width: 1.4px; fill: rgba(6, 40, 30, 0.94); }
+  .view-switch button.active { background: var(--accent) !important; color: white !important; }
+  .view-switch button { transition: all 0.2s; }
+  /* Subabas internas de Buscar e Vagas */
+  .subtabs-bar { display: flex; gap: 8px; margin: 18px 0 14px; border-bottom: 2px solid var(--border-subtle); padding-bottom: 4px; }
+  .subtab-btn { background: transparent; border: none; border-bottom: 2px solid transparent; border-radius: 6px 6px 0 0; padding: 10px 20px; font-size: 0.96rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; margin-bottom: -6px; }
+  .subtab-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.04); }
+  .subtab-btn.active { color: var(--accent); border-bottom: 2px solid var(--accent); font-weight: 700; background: var(--accent-subtle); }
+  .affinity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 12px; }
+  .affinity-card { background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 10px; padding: 14px 16px; border-left: 4px solid var(--accent); }
+  .affinity-title { font-weight: 700; font-size: 0.94rem; color: var(--text-main); margin-bottom: 4px; }
+  .affinity-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.45; }
+  .affinity-tag { display: inline-block; font-size: 0.74rem; font-weight: 600; padding: 2px 7px; border-radius: 4px; background: var(--bg-elevated); color: var(--accent); margin-top: 6px; }
+  .search-console { background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 12px; padding: 18px 22px; box-shadow: var(--card-shadow); margin-bottom: 16px; }
+  .remote-chip { background: #1e293b; border: 1px solid #334155; border-radius: 20px; padding: 5px 14px; font-size: 0.84rem; color: #f1f5f9; cursor: pointer; transition: all 0.2s; }
+  .remote-chip:hover { border-color: var(--accent); background: #0f172a; }
+  .remote-chip.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .stat-card { background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 12px; padding: 16px 20px; box-shadow: var(--card-shadow); }
+  .stat-lbl { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+  .stat-val { font-size: 1.85rem; font-weight: 800; color: var(--accent); margin-top: 4px; line-height: 1.2; }
+  .stat-sub { font-size: 0.84rem; color: var(--text-muted); margin-top: 4px; }
+  .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .chart-card { background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 12px; padding: 18px 20px; box-shadow: var(--card-shadow); }
+  .chart-card h3 { font-size: 1.02rem; font-weight: 700; color: var(--text-main); margin: 0 0 14px; }
+  .chart-bar-row { display: flex; align-items: center; gap: 10px; margin: 9px 0; font-size: 0.88rem; }
+  .chart-bar-label { width: 130px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); font-weight: 500; font-size: 0.86rem; }
+  .chart-bar-track { flex: 1; height: 9px; background: var(--bg-elevated); border-radius: 999px; overflow: hidden; border: 1px solid var(--border-subtle); }
+  .chart-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #0284c7); border-radius: 999px; transition: width 0.6s ease; }
+  .chart-bar-val { width: 65px; text-align: right; flex-shrink: 0; font-weight: 700; color: var(--text-muted); font-size: 0.82rem; }
   @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
 </style>
 </head>
@@ -283,8 +322,7 @@
   <p class="sub">Busque vagas nos portais, separe as que interessam e acompanhe as candidaturas. Tudo fica no seu computador. <span id="active-engine" class="muted" style="margin-left: 8px; font-weight: 600;"></span></p>
   <nav role="tablist" aria-label="Seções">
     <button role="tab" data-tab="perfil" aria-selected="false">Meu perfil</button>
-    <button role="tab" data-tab="buscar" aria-selected="true">Buscar</button>
-    <button role="tab" data-tab="vagas" aria-selected="false">Vagas novas <span id="count-new" class="nav-count" style="display:none;"></span></button>
+    <button role="tab" data-tab="vagas" aria-selected="true">Buscar e Vagas <span id="count-new" class="nav-count" style="display:none;"></span></button>
     <button role="tab" data-tab="interesse" aria-selected="false">Me interessam <span id="count-interesse" class="nav-count" style="display:none;"></span></button>
     <button role="tab" data-tab="candidaturas" aria-selected="false">Candidaturas <span id="count-candidaturas" class="nav-count" style="display:none;"></span></button>
     <button role="tab" data-tab="documentos" aria-selected="false">Currículos e Cartas <span id="count-documentos" class="nav-count" style="display:none;"></span></button>
@@ -324,64 +362,228 @@
     </div>
     <div id="perfil-out"></div>
   </section>
-
-  <section id="tab-buscar" role="tabpanel">
-    <div class="panel">
-      <h2>Buscar vagas</h2>
-      <p class="muted">A busca pesquisa vagas diretamente nos portais de ATS (Gupy, LinkedIn, Remotar, Sólides, Programathor e outros) usando todos os termos e tecnologias do seu perfil. A busca leva de 1 a 3 minutos.</p>
-      <div id="search-scope-info" class="search-info" style="margin: 14px 0; padding: 12px 16px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; font-size: 0.95em;">
-        Buscando em <strong>todas as consultas e portais configurados</strong> no seu perfil.
+  <section id="tab-vagas" role="tabpanel">
+    <!-- Painel Unificado de Filtros e Busca (Botão Único Abaixo de Todos os Filtros) -->
+    <div class="panel search-console">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+        <h2 style="margin: 0; font-size: 1.15rem; color: var(--text-heading);">Filtros e Busca de Oportunidades</h2>
+        <span id="search-status" class="muted" style="font-size: 0.88rem;" aria-live="polite"></span>
       </div>
-      <p class="row">
-        <label>Publicadas nos últimos
-          <select id="jobage"><option value="2" selected>Últimos 2 dias (Recomendado)</option><option value="1">Últimas 24 horas</option><option value="3">3 dias</option><option value="7">7 dias</option><option value="14">14 dias</option><option value="30">30 dias</option></select>
-        </label>
-      </p>
-      <button class="btn" id="btn-search">Buscar vagas</button>
-      <p id="search-status" aria-live="polite"></p>
-      <pre id="search-summary" class="summary" hidden></pre>
-    </div>
-  </section>
 
-  <section id="tab-vagas" role="tabpanel" hidden>
-    <div class="panel">
-      <div class="row">
-        <input type="text" id="f-text" placeholder="Filtrar por cargo ou empresa" aria-label="Filtrar por cargo ou empresa">
+      <!-- Linha 1: Filtros de Pesquisa, Região, Nota e Ordenação -->
+      <div class="row" style="gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+        <input type="text" id="f-text" placeholder="Filtrar por cargo, tecnologia ou empresa" aria-label="Filtrar por cargo ou empresa" style="min-width: 220px;">
         <select id="f-model" aria-label="Modelo de trabalho">
-          <option value="">Qualquer modelo</option><option value="remote">Remoto</option>
-          <option value="hybrid">Híbrido</option><option value="on-site">Presencial</option><option value="none">Não informado</option>
+          <option value="">Qualquer modelo</option>
+          <option value="remote">Remoto</option>
+          <option value="hybrid">Híbrido</option>
+          <option value="on-site">Presencial</option>
+          <option value="none">Não informado</option>
         </select>
         <select id="f-portal" aria-label="Portal"><option value="">Todos os portais</option></select>
-        <select id="f-days" aria-label="Período"><option value="">Todas as datas</option><option value="1">Últimas 24 horas</option><option value="2">Últimos 2 dias</option><option value="3">Últimos 3 dias</option><option value="7">Últimos 7 dias</option></select>
+        <select id="f-region" aria-label="Região / Polo">
+          <option value="">Todas as regiões</option>
+          <option value="brasil">Brasil (Todas UFs e Remoto BR)</option>
+          <option value="europa">Europa (EURES e Países Europeus)</option>
+          <option value="global">Américas, Ásia e Global</option>
+          <option value="remote">Apenas Vagas Remotas</option>
+        </select>
         <select id="f-score" aria-label="Filtrar por nota">
           <option value="">Todas as notas</option>
           <option value="high">Maiores notas (80+)</option>
           <option value="med">Notas médias ou maiores (60+)</option>
+          <option value="low">Menores notas (40 a 59)</option>
           <option value="triadas">Apenas vagas com nota</option>
         </select>
-        <label><input type="checkbox" id="f-nowarn"> Só sem avisos</label>
-      </div>
-      <div class="batch-bar">
-        <label><input type="checkbox" id="check-all"> Selecionar tudo</label>
-        <select id="batch-scope">
-          <option value="5">Top 5 da lista filtrada</option>
-          <option value="10">Top 10 da lista filtrada</option>
-          <option value="50">Top 50 da lista filtrada</option>
-          <option value="all-visible">Todas as vagas filtradas</option>
-          <option value="selected">Vagas selecionadas</option>
-        </select>
-        <button class="btn small" id="btn-batch">Triar vagas com a IA</button>
-        <select id="f-sort">
+        <select id="f-sort" aria-label="Ordenação">
           <option value="date">Ordenar por: Mais recentes</option>
-          <option value="score-asc">Ordenar por: Maiores notas (ordem crescente)</option>
-          <option value="score-desc">Ordenar por: Maiores notas (ordem decrescente)</option>
+          <option value="score-desc">Ordenar por: Maior nota primeiro</option>
+          <option value="score-asc">Ordenar por: Menor nota primeiro</option>
         </select>
-        <button class="btn small secondary" id="btn-clear-pending" title="Descarta da lista todas as vagas pendentes não salvas">Limpar vagas pendentes</button>
-        <span id="batch-status" class="muted"></span>
+        <select id="f-days" aria-label="Período">
+          <option value="">Todas as datas</option>
+          <option value="1">Últimas 24 horas</option>
+          <option value="2">Últimos 2 dias</option>
+          <option value="3">Últimos 3 dias</option>
+          <option value="7">Últimos 7 dias</option>
+        </select>
+        <label style="display: flex; align-items: center; gap: 5px;"><input type="checkbox" id="f-nowarn"> Só sem avisos</label>
+      </div>
+
+      <!-- Linha 2: Configuração de Escopo da Varredura nos Portais -->
+      <div class="row" style="align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+        <label style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 0.86rem; font-weight: 600; color: var(--text-muted);">Fontes da busca:</span>
+          <select id="search-focus">
+            <option value="all" selected>Todas as fontes (Brasil, Global & Europa EURES)</option>
+            <option value="europa">Europa (Portal Oficial EURES)</option>
+            <option value="google">Vagas Google Careers (Bacharelado)</option>
+            <option value="cv">Visão Computacional & IA</option>
+          </select>
+        </label>
+        <label style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 0.86rem; font-weight: 600; color: var(--text-muted);">Publicadas:</span>
+          <select id="jobage">
+            <option value="2" selected>Últimos 2 dias (Recomendado)</option>
+            <option value="1">Últimas 24 horas</option>
+            <option value="3">Últimos 3 dias</option>
+            <option value="7">Últimos 7 dias</option>
+            <option value="14">Últimos 14 dias</option>
+            <option value="30">Últimos 30 dias</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Linha 3: Botão Único de Busca Abaixo de Todos os Filtros -->
+      <div style="margin-top: 14px; display: flex; align-items: center; gap: 12px;">
+        <button class="btn" id="btn-search" style="padding: 10px 24px; font-size: 0.95rem;">Buscar vagas</button>
+      </div>
+      <pre id="search-summary" class="summary" hidden style="margin-top: 12px;"></pre>
+    </div>
+
+    <!-- Seletor de Subabas da Aba Buscar e Vagas -->
+    <div class="subtabs-bar" role="tablist">
+      <button type="button" class="subtab-btn active" id="btn-subtab-mapa" data-subtab="mapa">Mapa Mundial & Estatísticas da Busca</button>
+      <button type="button" class="subtab-btn" id="btn-subtab-lista" data-subtab="lista">Lista Completa de Vagas <span id="sub-vagas-count" class="nav-count" style="display:none;"></span></button>
+    </div>
+
+    <!-- SUBABA 1: MAPA MUNDIAL INTERATIVO + DRILL-DOWN BRASIL + POLOS E GRÁFICOS PÓS-BUSCA -->
+    <div id="subtab-content-mapa">
+      <!-- Barra de Triagem Rápida com IA Acima do Mapa -->
+      <div class="panel" style="margin-bottom: 16px; padding: 12px 18px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <label style="display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.88rem;"><input type="checkbox" id="check-all-map"> Selecionar tudo</label>
+            <select id="batch-scope-map" style="padding: 6px 10px; font-size: 0.86rem;">
+              <option value="5">Top 5 da lista filtrada</option>
+              <option value="10">Top 10 da lista filtrada</option>
+              <option value="50">Top 50 da lista filtrada</option>
+              <option value="all-visible" selected>Todas as vagas filtradas</option>
+              <option value="selected">Vagas selecionadas</option>
+            </select>
+            <button class="btn small" id="btn-batch-map">Triar vagas com a IA</button>
+            <button class="btn small secondary" id="btn-clear-pending-map" title="Descarta da lista todas as vagas pendentes não salvas">Limpar vagas pendentes</button>
+            <span id="batch-status-map" class="muted" style="font-size: 0.86rem;"></span>
+          </div>
+
+        </div>
+      </div>
+      <!-- Mapa Mundi Interativo e Detalhe Brasil (27 UFs) -->
+      <div class="panel" style="background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+          <h3 style="margin: 0; font-size: 1.15rem; color: var(--text-heading);" id="map-title-heading">Mapa Mundial</h3>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" id="btn-map-world" class="btn small" style="background: var(--accent); color: white;">Mapa Mundial</button>
+            <button type="button" id="btn-map-brasil" class="btn small secondary">Mapa do Brasil</button>
+          </div>
+        </div>
+
+        <div id="map-stage" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 460px; background: #0b1120; border-radius: 12px; border: 1px solid #1e293b; padding: 18px; position: relative;">
+          <!-- SVG do Mapa Mundi Completo (viewBox 0 0 1000 500) -->
+          <div id="map-world-view" style="width: 100%; max-width: 960px;"></div>
+          <!-- SVG do Detalhe do Brasil (viewBox 0 0 600 600) -->
+          <div id="map-brasil-view" hidden style="width: 100%; max-width: 650px;"></div>
+
+          <div id="remote-chips-bar" style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; justify-content: center;"></div>
+        </div>
+
+        <!-- Legenda de Cores e Indicador de Filtro Ativo -->
+        <div id="map-legend" style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 0.84rem; color: var(--text-muted); flex-wrap: wrap; gap: 12px;">
+          <div id="map-legend-items" style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;"></div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <button type="button" id="btn-toggle-legend-mode" class="btn small secondary" style="display: none; padding: 4px 10px; font-size: 0.8rem;"></button>
+            <span id="map-filter-indicator" style="font-weight: 600; color: var(--accent);">Todas as localidades</span>
+            <button type="button" id="btn-clear-geo-filter" class="btn small secondary" style="display: none; padding: 4px 12px; font-size: 0.82rem;">Limpar seleção do mapa</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista Imediata de Vagas do Local Selecionado no Mapa -->
+      <div id="map-filtered-jobs-panel" class="panel" hidden style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <h3 id="map-filtered-jobs-title" style="margin: 0; font-size: 1.1rem; color: var(--text-heading);">Vagas na Localidade Selecionada</h3>
+          <button type="button" id="btn-view-filtered-jobs" class="btn small secondary">Abrir na aba de Lista Completa</button>
+        </div>
+        <div id="map-filtered-jobs-list" class="cards"></div>
+      </div>
+
+
+
+      <!-- Polos com Maior Afinidade com seu Currículo (Calculado Dinamicamente Após a Busca) -->
+      <div id="affinity-panel" class="panel" hidden style="margin-bottom: 20px;">
+        <h3 style="margin: 0 0 12px; font-size: 1.15rem; color: var(--text-heading);">Polos com Maior Afinidade com seu Currículo</h3>
+        <div id="affinity-grid" class="affinity-grid"></div>
+      </div>
+
+      <!-- Gráficos e Métricas das Vagas Encontradas (Exibido Apenas Após a Busca) -->
+      <div id="charts-panel" class="panel" hidden style="margin-bottom: 20px;">
+        <h3 style="margin: 0 0 16px; font-size: 1.15rem; color: var(--text-heading);">Estatísticas e Gráficos das Vagas Encontradas</h3>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-lbl">Vagas Encontradas</div>
+            <div class="stat-val" id="kpi-search-total">0</div>
+            <div class="stat-sub" id="kpi-search-filtered-sub">Total na lista atual</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-lbl">Países e Estados Mapeados</div>
+            <div class="stat-val" id="kpi-search-locations">0</div>
+            <div class="stat-sub">Polos com vagas ativas</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-lbl">Principal Polo na Busca</div>
+            <div class="stat-val" id="kpi-search-leader" style="font-size: 1.35rem; margin-top: 8px;">-</div>
+            <div class="stat-sub" id="kpi-search-leader-sub">Maior concentração</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-lbl" id="kpi-search-highfit-lbl">Vagas na Seleção</div>
+            <div class="stat-val" id="kpi-search-highfit">0</div>
+            <div class="stat-sub" id="kpi-search-highfit-sub">Total mapeado na busca</div>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-card">
+            <h3>Top Localidades (Países e Estados)</h3>
+            <div id="chart-locations"></div>
+          </div>
+          <div class="chart-card">
+            <h3 id="chart-workplace-title">Modelo de Trabalho</h3>
+            <div id="chart-workplace"></div>
+          </div>
+          <div class="chart-card" style="grid-column: 1 / -1;">
+            <h3>Vagas por Portal / Fonte de Busca</h3>
+            <div id="chart-portals" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px;"></div>
+          </div>
+        </div>
       </div>
     </div>
-    <p id="vagas-info" class="muted"></p>
-    <div id="vagas" class="cards"></div>
+
+    <!-- SUBABA 2: LISTA COMPLETA DE VAGAS ENCONTRADAS -->
+    <div id="subtab-content-lista" hidden>
+      <div class="panel">
+        <!-- Barra de Ações em Lote -->
+        <div class="batch-bar" style="margin-top: 0; padding-top: 0; border-top: 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <label style="display: flex; align-items: center; gap: 5px;"><input type="checkbox" id="check-all"> Selecionar tudo</label>
+            <select id="batch-scope">
+              <option value="5">Top 5 da lista filtrada</option>
+              <option value="10">Top 10 da lista filtrada</option>
+              <option value="50">Top 50 da lista filtrada</option>
+              <option value="all-visible">Todas as vagas filtradas</option>
+              <option value="selected">Vagas selecionadas</option>
+            </select>
+            <button class="btn small" id="btn-batch">Triar vagas com a IA</button>
+            <button class="btn small secondary" id="btn-clear-pending" title="Descarta da lista todas as vagas pendentes não salvas">Limpar vagas pendentes</button>
+            <span id="batch-status" class="muted"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informações e Cards da Lista -->
+      <p id="vagas-info" class="muted" style="margin-top: 16px;"></p>
+      <div id="vagas" class="cards"></div>
+    </div>
   </section>
 
   <section id="tab-interesse" role="tabpanel" hidden>
@@ -469,11 +671,46 @@ const PORTAIS = {
   "remotar-search": "Remotar", "greenhouse-search": "Greenhouse", "programathor-search": "Programathor",
   "geekhunter-search": "GeekHunter", "michaelpage-search": "Michael Page", "roberthalf-search": "Robert Half",
   "trampos-search": "Trampos", "pcd-search": "PCD Online", "agrobase-search": "Agrobase", "agrosearch-search": "AGROSearch",
-  "digai-search": "DigAÍ", "empregos-search": "Empregos.com.br", "linkedin-search": "LinkedIn", "freehire-search": "freehire",
+  "digai-search": "DigAÍ", "empregos-search": "Empregos.com.br", "linkedin-search": "LinkedIn", "freehire-search": "freehire", "google-careers": "Google Careers", "eures": "EURES (Europa)",
 };
 const MODELOS = { remote: "Remoto", hybrid: "Híbrido", "on-site": "Presencial" };
 const portalName = (p) => PORTAIS[p] || String(p || "").replace(/-search$/, "");
 let results = [];
+let geoData = null;
+let geoMapPromise = null;
+
+function formatNumber(n) {
+  return Number(n || 0).toLocaleString("pt-BR");
+}
+
+function renderBarChart(containerId, items, valKey, labelKey, totalOverride) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.replaceChildren();
+
+  if (!items || items.length === 0) {
+    container.append(el("p", { class: "empty", style: "margin: 8px 0; font-size: 0.86rem;", text: "Nenhum dado para exibir." }));
+    return;
+  }
+
+  const maxVal = totalOverride || Math.max(...items.map((i) => i[valKey] || 0), 1);
+
+  items.forEach((item) => {
+    const val = item[valKey] || 0;
+    const pct = Math.max(0, Math.min(100, Math.round((val / maxVal) * 100)));
+    const label = item[labelKey] || "";
+
+    const row = el("div", { class: "chart-bar-row" },
+      el("div", { class: "chart-bar-label", title: label, text: label }),
+      el("div", { class: "chart-bar-track" },
+        el("div", { class: "chart-bar-fill", style: `width: ${pct}%;` })
+      ),
+      el("div", { class: "chart-bar-val", text: `${formatNumber(val)} (${pct}%)` })
+    );
+
+    container.append(row);
+  });
+}
 
 // ---- utilidades: tudo que vem das vagas entra como texto, nunca como HTML ----
 function el(tag, props = {}, ...children) {
@@ -513,7 +750,10 @@ function show(name) {
     t.setAttribute("aria-selected", String(on));
     document.getElementById("tab-" + t.dataset.tab).hidden = !on;
   }
-  if (name === "vagas") loadResults();
+  if (name === "vagas") {
+    renderResults();
+    if (geoData) updateGeoMapData();
+  }
   if (name === "interesse") refreshClaude().then(loadSaved);
   if (name === "perfil") refreshClaude().then(() => loadProfile());
   if (name === "candidaturas") refreshClaude().then(loadApplications);
@@ -530,14 +770,7 @@ const btnSearch = document.getElementById("btn-search");
 let polling = null;
 
 function renderStatus(s) {
-  const info = document.getElementById("search-scope-info");
-  if (info && !info.dataset.done) {
-    info.dataset.done = "1";
-    const totalQ = s.total_queries || (s.priorities && s.priorities.reduce((acc, p) => acc + (p.queries || 0), 0)) || 0;
-    if (totalQ > 0) {
-      info.replaceChildren("Buscando em ", el("strong", { text: `todas as ${totalQ} consultas configuradas` }), " em portais de tecnologia e ATS (Gupy, LinkedIn, Programathor, Remotar, Sólides e outros).");
-    }
-  }
+
   if (s.provider && s.provider.label) {
     const eng = document.getElementById("active-engine");
     if (eng) eng.textContent = `[Motor: ${s.provider.label}]`;
@@ -547,15 +780,19 @@ function renderStatus(s) {
   statusEl.replaceChildren();
   if (job.running) statusEl.append(el("span", { class: "spinner", "aria-hidden": "true" }), ` Buscando desde ${job.started.slice(11, 16)}… pode continuar usando o computador.`);
   else if (job.error) statusEl.append(el("span", { class: "error", text: "A busca não terminou: " + job.error }));
-  else if (job.summary) statusEl.append("Busca concluída. ", el("a", { href: "#", onclick: (e) => { e.preventDefault(); show("vagas"); }, text: "Ver as vagas novas" }));
+  else if (job.summary) statusEl.textContent = "Busca concluída com sucesso.";
   summaryEl.hidden = !job.summary;
   summaryEl.textContent = job.summary || "";
   if (!job.running && polling) { clearInterval(polling); polling = null; loadResults(); }
 }
 async function refreshStatus() { try { renderStatus(await api("/api/status")); } catch (e) { statusEl.textContent = e.message; } }
+
+
 btnSearch.addEventListener("click", async () => {
   try {
-    await api("/api/search", { all: true, jobage: Number(document.getElementById("jobage").value) });
+    isTriageMode = false;
+    const focusVal = document.getElementById("search-focus") ? document.getElementById("search-focus").value : "all";
+    await api("/api/search", { all: true, jobage: Number(document.getElementById("jobage").value), focus: focusVal });
     polling = setInterval(refreshStatus, 2000);
     refreshStatus();
   } catch (e) { statusEl.textContent = e.message; }
@@ -588,28 +825,940 @@ if (btnClearPending) {
   });
 }
 
-// ---- vagas novas ----
-const filters = ["f-text", "f-model", "f-portal", "f-days", "f-score", "f-nowarn"].map((id) => document.getElementById(id));
-filters.forEach((f) => f.addEventListener("input", renderResults));
+// ---- motor geográfico & mapas interativos ----
+let activeGeoFilter = null;
+let currentMapMode = "world"; // "world" | "brasil"
+
+const BR_UF_WORDS = [
+  { uf: "SP", name: "São Paulo", words: ["são paulo", "sao paulo", "sp", "campinas", "santos", "sorocaba", "ribeirão preto", "são josé dos campos", "barueri", "osasco", "são bernardo", "jundiaí"] },
+  { uf: "MG", name: "Minas Gerais", words: ["minas gerais", "mg", "belo horizonte", "uberlândia", "uberlandia", "juiz de fora", "contagem", "betim"] },
+  { uf: "RJ", name: "Rio de Janeiro", words: ["rio de janeiro", "rj", "niterói", "niteroi", "petrópolis"] },
+  { uf: "PR", name: "Paraná", words: ["paraná", "parana", "pr", "curitiba", "maringá", "londrina", "cascavel"] },
+  { uf: "SC", name: "Santa Catarina", words: ["santa catarina", "sc", "florianópolis", "florianopolis", "joinville", "blumenau", "chapecó", "itajai", "itajaí"] },
+  { uf: "RS", name: "Rio Grande do Sul", words: ["rio grande do sul", "rs", "porto alegre", "caxias do sul", "canoas", "são leopoldo", "novo hamburgo"] },
+  { uf: "BA", name: "Bahia", words: ["bahia", "ba", "salvador", "feira de santana", "lauro de freitas"] },
+  { uf: "PE", name: "Pernambuco", words: ["pernambuco", "pe", "recife", "olinda", "jaboatao"] },
+  { uf: "CE", name: "Ceará", words: ["ceará", "ceara", "ce", "fortaleza"] },
+  { uf: "DF", name: "Distrito Federal", words: ["distrito federal", "df", "brasília", "brasilia"] },
+  { uf: "GO", name: "Goiás", words: ["goiás", "goias", "go", "goiânia", "goiania", "anápolis"] },
+  { uf: "ES", name: "Espírito Santo", words: ["espírito santo", "espirito santo", "es", "vitória", "vitoria", "vila velha", "serra"] },
+  { uf: "MT", name: "Mato Grosso", words: ["mato grosso", "mt", "cuiabá", "cuiaba"] },
+  { uf: "MS", name: "Mato Grosso do Sul", words: ["mato grosso do sul", "ms", "campo grande", "dourados"] },
+  { uf: "AM", name: "Amazonas", words: ["amazonas", "am", "manaus"] },
+  { uf: "PA", name: "Pará", words: ["pará", "belem", "belém"] },
+  { uf: "RN", name: "Rio Grande do Norte", words: ["rio grande do norte", "rn", "natal"] },
+  { uf: "PB", name: "Paraíba", words: ["paraíba", "paraiba", "pb", "joão pessoa", "campina grande"] },
+  { uf: "AL", name: "Alagoas", words: ["alagoas", "al", "maceió", "maceio"] },
+  { uf: "SE", name: "Sergipe", words: ["sergipe", "se", "aracaju"] },
+  { uf: "PI", name: "Piauí", words: ["piauí", "piaui", "pi", "teresina"] },
+  { uf: "MA", name: "Maranhão", words: ["maranhão", "maranhao", "ma", "são luís", "sao luis"] },
+  { uf: "RO", name: "Rondônia", words: ["rondônia", "rondonia", "ro", "porto velho"] },
+  { uf: "TO", name: "Tocantins", words: ["tocantins", "to", "palmas"] },
+  { uf: "AC", name: "Acre", words: ["acre", "ac", "rio branco"] },
+  { uf: "AP", name: "Amapá", words: ["amapá", "amapa", "ap", "macapá", "macapa"] },
+  { uf: "RR", name: "Roraima", words: ["roraima", "rr", "boa vista"] }
+];
+
+const WORLD_PATTERNS = [
+  // Europa
+  { code: "DE", name: "Alemanha", scope: "europa", words: ["germany", "deutschland", "alemanha", "berlin", "munich", "münchen", "frankfurt", "hamburg", "stuttgart", "kiel", "saarbrücken", "saarbrucken", "schleswig", "saarland", "cologne", "köln", "düsseldorf"] },
+  { code: "NL", name: "Holanda", scope: "europa", words: ["netherlands", "holanda", "países baixos", "amsterdam", "rotterdam", "eindhoven", "utrecht", "the hague", "delft"] },
+  { code: "GB", name: "Reino Unido", scope: "europa", words: ["united kingdom", "reino unido", "england", "scotland", "wales", "london", "manchester", "cambridge", "oxford", "edinburgh", "bristol", "belfast"] },
+  { code: "ES", name: "Espanha", scope: "europa", words: ["spain", "espanha", "españa", "madrid", "barcelona", "valencia", "seville", "bilbao", "malaga"] },
+  { code: "FR", name: "França", scope: "europa", words: ["france", "frança", "paris", "lyon", "toulouse", "marseille", "nice", "bordeaux", "lille"] },
+  { code: "IT", name: "Itália", scope: "europa", words: ["italy", "itália", "italia", "milan", "milano", "rome", "roma", "turin", "torino", "lombardy", "bologna"] },
+  { code: "PL", name: "Polônia", scope: "europa", words: ["poland", "polônia", "polska", "warsaw", "warszawa", "krakow", "kraków", "wroclaw", "gdansk", "poznan", "masovian"] },
+  { code: "CH", name: "Suíça", scope: "europa", words: ["switzerland", "suíça", "suica", "schweiz", "zürich", "zurich", "geneva", "genève", "basel", "bern", "lausanne"] },
+  { code: "SE", name: "Suécia", scope: "europa", words: ["sweden", "suécia", "suecia", "stockholm", "gothenburg", "göteborg", "malmö", "uppsala"] },
+  { code: "FI", name: "Finlândia", scope: "europa", words: ["finland", "finlândia", "finlandia", "helsinki", "espoo", "tampere", "uusimaa"] },
+  { code: "PT", name: "Portugal", scope: "europa", words: ["portugal", "lisbon", "lisboa", "porto", "braga", "coimbra", "aveiro"] },
+  { code: "IE", name: "Irlanda", scope: "europa", words: ["ireland", "irlanda", "dublin", "cork", "galway"] },
+  { code: "BE", name: "Bélgica", scope: "europa", words: ["belgium", "bélgica", "belgica", "brussels", "bruxelles", "antwerp", "ghent", "leuven"] },
+  { code: "AT", name: "Áustria", scope: "europa", words: ["austria", "áustria", "vienna", "wien", "graz", "linz", "salzburg"] },
+  { code: "NO", name: "Noruega", scope: "europa", words: ["norway", "noruega", "oslo", "bergen", "trondheim"] },
+  { code: "DK", name: "Dinamarca", scope: "europa", words: ["denmark", "dinamarca", "copenhagen", "københavn", "aarhus"] },
+  { code: "CZ", name: "República Tcheca", scope: "europa", words: ["czech", "czechia", "república tcheca", "prague", "praha", "brno"] },
+  { code: "RO", name: "Romênia", scope: "europa", words: ["romania", "romênia", "bucharest", "cluj"] },
+  { code: "HU", name: "Hungria", scope: "europa", words: ["hungary", "hungria", "budapest"] },
+  { code: "GR", name: "Grécia", scope: "europa", words: ["greece", "grécia", "athens", "thessaloniki"] },
+  { code: "BA", name: "Bósnia e Herzegovina", scope: "europa", words: ["bosnia", "herzegovina", "sarajevo"] },
+  { code: "CY", name: "Chipre", scope: "europa", words: ["cyprus", "chipre", "nicosia", "limassol"] },
+  { code: "LU", name: "Luxemburgo", scope: "europa", words: ["luxembourg", "luxemburgo"] },
+  { code: "BG", name: "Bulgária", scope: "europa", words: ["bulgaria", "bulgária", "sofia"] },
+  { code: "HR", name: "Croácia", scope: "europa", words: ["croatia", "croácia", "zagreb"] },
+  { code: "RS", name: "Sérvia", scope: "europa", words: ["serbia", "sérvia", "belgrade"] },
+  { code: "UA", name: "Ucrânia", scope: "europa", words: ["ukraine", "ucrânia", "kyiv", "kiev", "lviv"] },
+  { code: "EE", name: "Estônia", scope: "europa", words: ["estonia", "estônia", "tallinn"] },
+  { code: "LT", name: "Lituânia", scope: "europa", words: ["lithuania", "lituânia", "vilnius"] },
+  { code: "LV", name: "Letônia", scope: "europa", words: ["latvia", "letônia", "riga"] },
+  // Américas (exceto Brasil tratado com UFs)
+  { code: "CA", name: "Canadá", scope: "global", words: ["canada", "canadá", "toronto", "ontario", "vancouver", "montreal", "ottawa", "calgary", "british columbia", "quebec"] },
+  { code: "US", name: "Estados Unidos", scope: "global", words: ["united states", "estados unidos", "usa", "u.s.", "mountain view", "sunnyvale", "san francisco", "california", "new york", "seattle", "austin", "boston", "chicago", "washington, dc", "redwood city", "colorado springs", "irving, tx", "wayne, pa", "atlanta", "palo alto", "menlo park", "cupertino", "san jose", "los angeles", "denver", "dallas", "houston", "miami", "philadelphia", "pittsburgh"] },
+  { code: "MX", name: "México", scope: "global", words: ["mexico", "méxico", "guadalajara", "monterrey", "ciudad de méxico"] },
+  { code: "AR", name: "Argentina", scope: "global", words: ["argentina", "buenos aires", "córdoba"] },
+  { code: "CL", name: "Chile", scope: "global", words: ["chile", "santiago"] },
+  { code: "CO", name: "Colômbia", scope: "global", words: ["colombia", "colômbia", "bogotá", "bogota", "medellín", "medellin"] },
+  { code: "UY", name: "Uruguai", scope: "global", words: ["uruguay", "uruguai", "montevideo"] },
+  { code: "PE", name: "Peru", scope: "global", words: ["peru", "lima"] },
+  // Ásia, Oceania e África
+  { code: "IN", name: "Índia", scope: "global", words: ["india", "índia", "bangalore", "bengaluru", "hyderabad", "mumbai", "pune", "chennai", "gurgaon", "gurugram", "noida", "delhi"] },
+  { code: "CN", name: "China", scope: "global", words: ["china", "beijing", "shanghai", "shenzhen", "guangzhou", "guangdong", "zhuhai", "hangzhou", "chengdu", "hong kong"] },
+  { code: "KR", name: "Coreia do Sul", scope: "global", words: ["south korea", "coreia do sul", "korea", "seoul", "busan"] },
+  { code: "SG", name: "Singapura", scope: "global", words: ["singapore", "singapura", "cingapura"] },
+  { code: "JP", name: "Japão", scope: "global", words: ["japan", "japão", "tokyo", "osaka", "kyoto"] },
+  { code: "AU", name: "Austrália", scope: "global", words: ["australia", "austrália", "sydney", "melbourne", "brisbane", "perth"] },
+  { code: "NZ", name: "Nova Zelândia", scope: "global", words: ["new zealand", "nova zelândia", "auckland", "wellington"] },
+  { code: "ZA", name: "África do Sul", scope: "global", words: ["south africa", "áfrica do sul", "johannesburg", "soweto", "cape town", "pretoria"] },
+  { code: "PH", name: "Filipinas", scope: "global", words: ["philippines", "filipinas", "manila", "taguig", "cebu", "makati"] },
+  { code: "IL", name: "Israel", scope: "global", words: ["israel", "tel aviv", "haifa", "jerusalem"] },
+  { code: "AE", name: "Emirados Árabes", scope: "global", words: ["united arab emirates", "emirados árabes", "dubai", "abu dhabi", "uae"] },
+  { code: "TR", name: "Turquia", scope: "europa", words: ["turkey", "turquia", "türkiye", "istanbul", "ankara"] }
+];
+
+const BR_PORTALS = new Set([
+  "gupy-search", "solides-search", "vagas-search", "infojobs-search", "remotar-search",
+  "programathor-search", "geekhunter-search", "trampos-search", "pcd-search",
+  "agrobase-search", "agrosearch-search", "digai-search", "empregos-search"
+]);
+
+function resolveGeo(r) {
+  const rawLoc = String(r.location || "").trim();
+  const loc = rawLoc.toLowerCase();
+  const portal = String(r.portal || "").toLowerCase();
+  const workplace = String(r.workplace_type || "").toLowerCase();
+  const isRemote = workplace === "remote" || loc.includes("remot") || loc.includes("home office") || loc.includes("anywhere") || loc.includes("teletrabalho");
+
+  // 1. Verificar se menciona explicitamente Brasil ou cidades/UFs brasileiras (quando não for outro país explícito)
+  const hasExplicitBrasil = loc.includes("brasil") || loc.includes("brazil");
+
+  // 2. Verificar padrões de países estrangeiros (Europa, EUA, Canadá, Ásia, África, etc.)
+  if (!hasExplicitBrasil) {
+    for (const country of WORLD_PATTERNS) {
+      for (const w of country.words) {
+        if (loc.includes(w)) {
+          return {
+            scope: country.scope,
+            countryCode: country.code,
+            code: country.code,
+            label: country.name,
+            isRemote: isRemote,
+            remoteBucket: isRemote ? (country.scope === "europa" ? "EU_REMOTE" : "GLOBAL_REMOTE") : null
+          };
+        }
+      }
+    }
+    // Checar sufixos de estados americanos como ", CA", ", NY", ", TX", ", MA", ", CO", ", PA", ", IL", ", WA", ", FL", ", GA", ", VA"
+    if (/,\s*(ca|ny|tx|ma|co|pa|il|wa|fl|ga|va|nc|nj|oh|mi|az|mn|or|ut|md|dc)(\b|\s|\()/i.test(rawLoc)) {
+      return {
+        scope: "global",
+        countryCode: "US",
+        code: "US",
+        label: "Estados Unidos",
+        isRemote: isRemote,
+        remoteBucket: isRemote ? "GLOBAL_REMOTE" : null
+      };
+    }
+  }
+
+  // 3. Se for do portal EURES sem país específico identificado
+  if (portal === "eures") {
+    return {
+      scope: "europa",
+      countryCode: "DE",
+      code: isRemote ? "EU_REMOTE" : "DE",
+      label: isRemote ? "Remoto Europa" : "Europa (EURES)",
+      isRemote: isRemote,
+      remoteBucket: isRemote ? "EU_REMOTE" : null
+    };
+  }
+
+  // 4. Verificar Estados Brasileiros (27 UFs)
+  for (const m of BR_UF_WORDS) {
+    for (const w of m.words) {
+      const regex = new RegExp("(^|[\\s,/()-])" + w + "([\\s,/()-]|$)", "i");
+      if (regex.test(loc)) {
+        return {
+          scope: "brasil",
+          countryCode: "BR",
+          code: m.uf,
+          label: `${m.name} (${m.uf})`,
+          isRemote: isRemote,
+          remoteBucket: isRemote ? "REMOTO_BR" : null
+        };
+      }
+    }
+  }
+
+  // 5. Se for explicitamente Brasil ou de um portal brasileiro
+  if (hasExplicitBrasil || BR_PORTALS.has(portal)) {
+    return {
+      scope: "brasil",
+      countryCode: "BR",
+      code: isRemote ? "REMOTO_BR" : "SP",
+      label: isRemote ? "Remoto Brasil" : "Brasil (Nacional)",
+      isRemote: isRemote,
+      remoteBucket: isRemote ? "REMOTO_BR" : null
+    };
+  }
+
+  // 6. Vagas sem país em portais globais (ex: "Remote" puro no freehire ou linkedin)
+  if (isRemote) {
+    return {
+      scope: "global",
+      countryCode: "GLOBAL_REMOTE",
+      code: "GLOBAL_REMOTE",
+      label: "Remoto Global",
+      isRemote: true,
+      remoteBucket: "GLOBAL_REMOTE"
+    };
+  }
+
+  return {
+    scope: "brasil",
+    countryCode: "BR",
+    code: "SP",
+    label: "São Paulo (SP)",
+    isRemote: false,
+    remoteBucket: null
+  };
+}
+
+let isTriageMode = false;
+
+function renderMapLegend() {
+  const container = document.getElementById("map-legend-items");
+  if (!container) return;
+  container.replaceChildren();
+
+  const title = el("span", { style: "font-weight: 600; color: var(--text-main);", text: isTriageMode ? "Legenda (Notas da Triagem):" : "Legenda (Volume de Vagas):" });
+  container.append(title);
+
+  function makeLegendItem(color, label, border, glow) {
+    const item = el("span", { style: "display: inline-flex; align-items: center; gap: 5px;" });
+    let boxStyle = `width: 12px; height: 12px; border-radius: 3px; background: ${color}; display: inline-block;`;
+    if (border) boxStyle += ` border: 1px solid ${border};`;
+    if (glow) boxStyle += ` box-shadow: ${glow};`;
+    item.append(
+      el("span", { style: boxStyle }),
+      document.createTextNode(` ${label}`)
+    );
+    return item;
+  }
+
+  if (isTriageMode) {
+    container.append(
+      makeLegendItem("#131b2b", "0 vagas", "#23324a"),
+      makeLegendItem("#64748b", "Nota < 60"),
+      makeLegendItem("#0ea5e9", "Nota 60 a 74"),
+      makeLegendItem("#10b981", "Nota 75+ (Alta afinidade)", "#34d399", "0 0 5px rgba(16,185,129,0.5)")
+    );
+  } else {
+    container.append(
+      makeLegendItem("#131b2b", "0 vagas", "#23324a"),
+      makeLegendItem("#0369a1", "1 a 4 vagas"),
+      makeLegendItem("#0284c7", "5 a 9 vagas"),
+      makeLegendItem("#f59e0b", "10+ vagas (Alto volume)")
+    );
+  }
+
+  const toggleBtn = document.getElementById("btn-toggle-legend-mode");
+  if (toggleBtn) {
+    const hasScreened = results && results.some((r) => r.screening && typeof r.screening.score === "number");
+    if (hasScreened) {
+      toggleBtn.style.display = "inline-block";
+      toggleBtn.textContent = isTriageMode ? "Ver volume de vagas" : "Ver notas da triagem";
+    } else {
+      toggleBtn.style.display = "none";
+    }
+  }
+}
+
+function getGeoColor(cnt, maxScore, isActive) {
+  if (isActive) return "#38bdf8";
+  if (!cnt || cnt <= 0) return "#131b2b";
+
+  if (isTriageMode) {
+    if (maxScore >= 75) return "#10b981";
+    if (maxScore >= 60) return "#0ea5e9";
+    if (maxScore >= 0) return "#64748b";
+    return "#0369a1";
+  }
+
+  // Modo volume de vagas
+  if (cnt >= 10) return "#f59e0b";
+  if (cnt >= 5) return "#0284c7";
+  return "#0369a1";
+}
+
+function switchMapView(mode) {
+  currentMapMode = mode;
+  const worldView = document.getElementById("map-world-view");
+  const brView = document.getElementById("map-brasil-view");
+  const btnWorld = document.getElementById("btn-map-world");
+  const btnBrasil = document.getElementById("btn-map-brasil");
+  const titleEl = document.getElementById("map-title-heading");
+
+  if (mode === "brasil") {
+    if (worldView) worldView.hidden = true;
+    if (brView) brView.hidden = false;
+    if (btnBrasil) {
+      btnBrasil.classList.remove("secondary");
+      btnBrasil.style.background = "var(--accent)";
+      btnBrasil.style.color = "white";
+    }
+    if (btnWorld) {
+      btnWorld.classList.add("secondary");
+      btnWorld.style.background = "";
+      btnWorld.style.color = "";
+    }
+    if (titleEl) titleEl.textContent = "Mapa do Brasil";
+  } else {
+    if (worldView) worldView.hidden = false;
+    if (brView) brView.hidden = true;
+    if (btnWorld) {
+      btnWorld.classList.remove("secondary");
+      btnWorld.style.background = "var(--accent)";
+      btnWorld.style.color = "white";
+    }
+    if (btnBrasil) {
+      btnBrasil.classList.add("secondary");
+      btnBrasil.style.background = "";
+      btnBrasil.style.color = "";
+    }
+    if (titleEl) titleEl.textContent = "Mapa Mundial";
+  }
+}
+
+const btnMapWorld = document.getElementById("btn-map-world");
+const btnMapBrasil = document.getElementById("btn-map-brasil");
+if (btnMapWorld) {
+  btnMapWorld.addEventListener("click", () => {
+    switchMapView("world");
+    if (activeGeoFilter && activeGeoFilter.type === "uf") {
+      activeGeoFilter = null;
+      document.getElementById("map-filter-indicator").textContent = "Todas as localidades";
+      document.getElementById("btn-clear-geo-filter").style.display = "none";
+      renderResults();
+      updateGeoMapData();
+    }
+  });
+}
+if (btnMapBrasil) {
+  btnMapBrasil.addEventListener("click", () => {
+    switchMapView("brasil");
+    if (!activeGeoFilter || activeGeoFilter.type === "country") {
+      const baseRows = getBaseFilteredResults();
+      const brCnt = baseRows.filter((r) => resolveGeo(r).countryCode === "BR").length;
+      activeGeoFilter = { type: "country", code: "BR", name: "Brasil (Todos os Estados)", count: brCnt };
+      document.getElementById("map-filter-indicator").textContent = `Brasil (${brCnt} vagas)`;
+      document.getElementById("btn-clear-geo-filter").style.display = "inline-block";
+      renderResults();
+      updateGeoMapData();
+    }
+  });
+}
+
+function initGeoMap() {
+  if (geoData) {
+    updateGeoMapData();
+    return Promise.resolve(geoData);
+  }
+  if (geoMapPromise) return geoMapPromise;
+
+  try {
+    const cached = sessionStorage.getItem("job_pindorama_geo");
+    if (cached) {
+      geoData = JSON.parse(cached);
+      updateGeoMapData();
+    }
+  } catch {}
+
+  geoMapPromise = api("/api/geo").then((data) => {
+    geoData = data;
+    try { sessionStorage.setItem("job_pindorama_geo", JSON.stringify(data)); } catch {}
+    updateGeoMapData();
+    return geoData;
+  }).catch((err) => {
+    console.warn("Não foi possível carregar dados geográficos:", err);
+    geoMapPromise = null;
+  });
+
+  return geoMapPromise;
+}
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+function svgEl(tag, props = {}, ...children) {
+  const node = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(props)) {
+    node.setAttribute(k, v);
+  }
+  for (const c of children) {
+    if (c == null) continue;
+    if (typeof c === "string") node.textContent = c;
+    else node.append(c);
+  }
+  return node;
+}
+
+function getBaseFilteredResults() {
+  const text = (document.getElementById("f-text") ? document.getElementById("f-text").value : "").toLowerCase();
+  const model = document.getElementById("f-model") ? document.getElementById("f-model").value : "";
+  const portal = document.getElementById("f-portal") ? document.getElementById("f-portal").value : "";
+  const days = document.getElementById("f-days") ? document.getElementById("f-days").value : "";
+  const scoreFilter = document.getElementById("f-score") ? document.getElementById("f-score").value : "";
+  const nowarn = document.getElementById("f-nowarn") ? document.getElementById("f-nowarn").checked : false;
+  const regionVal = document.getElementById("f-region") ? document.getElementById("f-region").value : "";
+
+  const maxDays = days ? Number(days) : null;
+  const today = new Date();
+  today.setHours(23, 59, 59, 999);
+  const fold = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+  return results.filter((r) => {
+    const geo = resolveGeo(r);
+    if (regionVal) {
+      if (regionVal === "remote" && !geo.isRemote) return false;
+      if (regionVal === "brasil" && geo.scope !== "brasil") return false;
+      if (regionVal === "europa" && geo.scope !== "europa") return false;
+      if (regionVal === "global" && geo.scope !== "global") return false;
+    }
+    return (!text || fold(`${r.title} ${r.company} ${r.location || ""}`).includes(fold(text))) &&
+      (!model || (model === "none" ? !r.workplace_type : r.workplace_type === model)) &&
+      (!portal || r.portal === portal) &&
+      (!nowarn || !warningOf(r)) &&
+      (!maxDays || (r.date && Math.floor((today - new Date(r.date + "T00:00:00")) / 86400000) <= maxDays)) &&
+      (!scoreFilter || (
+        scoreFilter === "triadas" ? (r.screening && typeof r.screening.score === "number") :
+        scoreFilter === "high" ? (r.screening && r.screening.score >= 80) :
+        scoreFilter === "med" ? (r.screening && r.screening.score >= 60) :
+        scoreFilter === "low" ? (r.screening && r.screening.score < 60) : true
+      ));
+  });
+}
+
+function applyGeoFilterSelection(filterObj) {
+  if (activeGeoFilter && activeGeoFilter.type === filterObj.type && activeGeoFilter.code === filterObj.code) {
+    if (filterObj.type === "uf" && currentMapMode === "brasil") {
+      const baseRows = getBaseFilteredResults();
+      const brCnt = baseRows.filter((r) => resolveGeo(r).countryCode === "BR").length;
+      activeGeoFilter = { type: "country", code: "BR", name: "Brasil (Todos os Estados)", count: brCnt };
+      document.getElementById("map-filter-indicator").textContent = `Brasil (${brCnt} vagas)`;
+      document.getElementById("btn-clear-geo-filter").style.display = "inline-block";
+    } else {
+      activeGeoFilter = null;
+      document.getElementById("map-filter-indicator").textContent = "Todas as localidades";
+      document.getElementById("btn-clear-geo-filter").style.display = "none";
+    }
+  } else {
+    activeGeoFilter = filterObj;
+    document.getElementById("map-filter-indicator").textContent = `${filterObj.name} (${filterObj.count} vagas)`;
+    document.getElementById("btn-clear-geo-filter").style.display = "inline-block";
+  }
+  renderResults();
+  updateGeoMapData();
+}
+
+function renderBrasilMap(states, counts, scores) {
+  const container = document.getElementById("map-brasil-view");
+  if (!container) return;
+  container.replaceChildren();
+
+  const svg = svgEl("svg", {
+    viewBox: "0 0 600 600",
+    style: "width: 100%; height: auto; max-height: 500px; display: block;",
+    role: "img",
+    "aria-label": "Mapa do Brasil por estados"
+  });
+
+  // Defs estilizados para visual cartográfico moderno
+  const defs = svgEl("defs");
+  const grad = svgEl("radialGradient", { id: "br-ocean-grad", cx: "50%", cy: "50%", r: "70%" });
+  grad.append(
+    svgEl("stop", { offset: "0%", "stop-color": "#0d1525" }),
+    svgEl("stop", { offset: "100%", "stop-color": "#070b13" })
+  );
+  defs.append(grad);
+  svg.append(defs);
+
+  // Fundo moderno sutil
+  svg.append(svgEl("rect", { width: "600", height: "600", rx: "10", fill: "url(#br-ocean-grad)" }));
+
+  // Linhas cartográficas decorativas
+  svg.append(svgEl("line", { x1: "20", y1: "150", x2: "580", y2: "150", stroke: "rgba(51, 65, 85, 0.22)", "stroke-dasharray": "3 5" }));
+  svg.append(svgEl("line", { x1: "20", y1: "300", x2: "580", y2: "300", stroke: "rgba(51, 65, 85, 0.22)", "stroke-dasharray": "3 5" }));
+  svg.append(svgEl("line", { x1: "20", y1: "450", x2: "580", y2: "450", stroke: "rgba(51, 65, 85, 0.22)", "stroke-dasharray": "3 5" }));
+
+  const gPaths = svgEl("g", { id: "br-paths" });
+  const gBadges = svgEl("g", { id: "br-badges" });
+
+  for (const [uf, info] of Object.entries(states)) {
+    const cnt = counts[uf] || 0;
+    const maxScore = scores[uf] || -1;
+    const isHighFit = isTriageMode && maxScore >= 75;
+    const isActive = activeGeoFilter && activeGeoFilter.type === "uf" && activeGeoFilter.code === uf;
+    const fill = getGeoColor(cnt, maxScore, isActive);
+
+    let pathClass = "geo-state";
+    if (isActive) pathClass += " active";
+    else if (isHighFit) pathClass += " fit-high";
+
+    const path = svgEl("path", {
+      class: pathClass,
+      "data-uf": uf,
+      "data-name": info.name,
+      d: info.path,
+      fill: fill,
+      style: `fill: ${fill};`
+    });
+
+    const onClick = () => {
+      applyGeoFilterSelection({ type: "uf", code: uf, name: `${info.name} (${uf})`, count: cnt });
+    };
+
+    path.addEventListener("click", onClick);
+    gPaths.append(path);
+
+    if (cnt > 0) {
+      const gBadge = svgEl("g", { class: "geo-badge-group", "data-uf": uf, style: "cursor: pointer;" });
+      const hasScore = isTriageMode && maxScore >= 0;
+      const rectW = hasScore ? 62 : 46;
+      const rectH = 24;
+      const rect = svgEl("rect", {
+        class: "geo-badge-bg" + (isHighFit ? " fit-high" : ""),
+        x: String(info.cx - rectW / 2),
+        y: String(info.cy - 12),
+        width: String(rectW),
+        height: String(rectH)
+      });
+      const txtUf = svgEl("text", { class: "geo-badge", x: String(info.cx), y: String(info.cy - 1) }, uf);
+      const subLabel = hasScore ? `${cnt} (${maxScore}p)` : `${cnt} vaga(s)`;
+      const subColor = isHighFit ? "#34d399" : (isTriageMode && maxScore >= 60 ? "#38bdf8" : (isTriageMode && maxScore >= 0 ? "#94a3b8" : "#38bdf8"));
+      const txtCnt = svgEl("text", { class: "geo-badge-sub", style: `fill: ${subColor}; font-size: 8.5px;`, x: String(info.cx), y: String(info.cy + 9) }, subLabel);
+      gBadge.append(rect, txtUf, txtCnt);
+      gBadge.addEventListener("click", onClick);
+      gBadges.append(gBadge);
+    } else {
+      const txtUf = svgEl("text", { class: "geo-badge-sub", style: "fill: #475569; font-size: 8px;", x: String(info.cx), y: String(info.cy + 3) }, uf);
+      gBadges.append(txtUf);
+    }
+  }
+
+  svg.append(gPaths, gBadges);
+  container.append(svg);
+}
+
+const EXTRA_WORLD_CENTROIDS = {
+  SG: { name: "Singapura", cx: 788, cy: 246 },
+  LU: { name: "Luxemburgo", cx: 517, cy: 112 },
+  MT: { name: "Malta", cx: 540, cy: 145 }
+};
+
+function renderWorldMap(world, counts, scores) {
+  const container = document.getElementById("map-world-view");
+  if (!container) return;
+  container.replaceChildren();
+
+  const svg = svgEl("svg", {
+    viewBox: "0 0 1000 500",
+    style: "width: 100%; height: auto; max-height: 500px; display: block;",
+    role: "img",
+    "aria-label": "Mapa Mundial de Oportunidades"
+  });
+
+  // Defs: gradiente oceânico e filtros de brilho para países com vagas e alta afinidade
+  const defs = svgEl("defs");
+  const grad = svgEl("radialGradient", { id: "world-ocean-grad", cx: "50%", cy: "45%", r: "70%" });
+  grad.append(
+    svgEl("stop", { offset: "0%", "stop-color": "#0d1525" }),
+    svgEl("stop", { offset: "100%", "stop-color": "#070b13" })
+  );
+  defs.append(grad);
+  svg.append(defs);
+
+  // Fundo cartográfico estilizado
+  svg.append(svgEl("rect", { width: "1000", height: "500", rx: "10", fill: "url(#world-ocean-grad)" }));
+
+  // Linhas de coordenadas cartográficas elegantes (Equador, Trópicos, Meridianos)
+  const gGrid = svgEl("g", { id: "carto-grid", style: "pointer-events: none;" });
+  gGrid.append(
+    svgEl("line", { x1: "20", y1: "250", x2: "980", y2: "250", stroke: "rgba(51, 65, 85, 0.28)", "stroke-dasharray": "4 6" }),
+    svgEl("line", { x1: "20", y1: "180", x2: "980", y2: "180", stroke: "rgba(51, 65, 85, 0.16)", "stroke-dasharray": "3 6" }),
+    svgEl("line", { x1: "20", y1: "320", x2: "980", y2: "320", stroke: "rgba(51, 65, 85, 0.16)", "stroke-dasharray": "3 6" }),
+    svgEl("line", { x1: "250", y1: "20", x2: "250", y2: "480", stroke: "rgba(51, 65, 85, 0.16)", "stroke-dasharray": "3 6" }),
+    svgEl("line", { x1: "500", y1: "20", x2: "500", y2: "480", stroke: "rgba(51, 65, 85, 0.22)", "stroke-dasharray": "4 6" }),
+    svgEl("line", { x1: "750", y1: "20", x2: "750", y2: "480", stroke: "rgba(51, 65, 85, 0.16)", "stroke-dasharray": "3 6" })
+  );
+  svg.append(gGrid);
+
+  const gPaths = svgEl("g", { id: "world-paths" });
+  const gBadges = svgEl("g", { id: "world-badges" });
+
+  for (const [code, info] of Object.entries(world)) {
+    // Não renderizar a Antártida (AQ) para dar um aspecto limpo e focado no mercado de trabalho
+    if (code === "AQ") continue;
+
+    const cnt = counts[code] || 0;
+    const maxScore = scores[code] || -1;
+    const isHighFit = isTriageMode && maxScore >= 75;
+    const isActive = activeGeoFilter && activeGeoFilter.type === "country" && activeGeoFilter.code === code;
+    const fill = getGeoColor(cnt, maxScore, isActive);
+
+    let pathClass = "geo-state";
+    if (isActive) pathClass += " active";
+    else if (isHighFit) pathClass += " fit-high";
+
+    const path = svgEl("path", {
+      class: pathClass,
+      "data-code": code,
+      "data-name": info.name,
+      d: info.path,
+      fill: fill,
+      style: `fill: ${fill};`
+    });
+
+    const onClick = () => {
+      if (code === "BR") {
+        activeGeoFilter = { type: "country", code: "BR", name: "Brasil", count: cnt };
+        document.getElementById("map-filter-indicator").textContent = `Brasil (${cnt} vagas)`;
+        document.getElementById("btn-clear-geo-filter").style.display = "inline-block";
+        switchMapView("brasil");
+        renderResults();
+        updateGeoMapData();
+      } else {
+        applyGeoFilterSelection({ type: "country", code: code, name: `${info.name} (${code})`, count: cnt });
+      }
+    };
+
+    path.addEventListener("click", onClick);
+    gPaths.append(path);
+
+    if (cnt > 0 && info.cx > 0 && info.cy > 0) {
+      const gBadge = svgEl("g", { class: "geo-badge-group", "data-code": code, style: "cursor: pointer;" });
+      const hasScore = isTriageMode && maxScore >= 0;
+      const rectW = hasScore ? 62 : 46;
+      const rectH = 24;
+      const rect = svgEl("rect", {
+        class: "geo-badge-bg" + (isHighFit ? " fit-high" : ""),
+        x: String(info.cx - rectW / 2),
+        y: String(info.cy - 12),
+        width: String(rectW),
+        height: String(rectH)
+      });
+      const txtCode = svgEl("text", { class: "geo-badge", x: String(info.cx), y: String(info.cy - 1) }, code);
+      const subLabel = hasScore ? `${cnt} (${maxScore}p)` : `${cnt} vaga(s)`;
+      const subColor = isHighFit ? "#34d399" : (isTriageMode && maxScore >= 60 ? "#38bdf8" : (isTriageMode && maxScore >= 0 ? "#94a3b8" : "#38bdf8"));
+      const txtCnt = svgEl("text", { class: "geo-badge-sub", style: `fill: ${subColor}; font-size: 8.5px;`, x: String(info.cx), y: String(info.cy + 9) }, subLabel);
+      gBadge.append(rect, txtCode, txtCnt);
+      gBadge.addEventListener("click", onClick);
+      gBadges.append(gBadge);
+    }
+  }
+
+  // Renderizar badges de hubs adicionais com vagas (ex: Singapura)
+  for (const [code, extra] of Object.entries(EXTRA_WORLD_CENTROIDS)) {
+    if (world[code]) continue;
+    const cnt = counts[code] || 0;
+    const maxScore = scores[code] || -1;
+    const isHighFit = isTriageMode && maxScore >= 75;
+    if (cnt > 0) {
+      const gBadge = svgEl("g", { class: "geo-badge-group", "data-code": code, style: "cursor: pointer;" });
+      const hasScore = isTriageMode && maxScore >= 0;
+      const rectW = hasScore ? 62 : 46;
+      const rectH = 24;
+      const rect = svgEl("rect", {
+        class: "geo-badge-bg" + (isHighFit ? " fit-high" : ""),
+        x: String(extra.cx - rectW / 2),
+        y: String(extra.cy - 12),
+        width: String(rectW),
+        height: String(rectH)
+      });
+      const txtCode = svgEl("text", { class: "geo-badge", x: String(extra.cx), y: String(extra.cy - 1) }, code);
+      const subLabel = hasScore ? `${cnt} (${maxScore}p)` : `${cnt} vaga(s)`;
+      const subColor = isHighFit ? "#34d399" : (isTriageMode && maxScore >= 60 ? "#38bdf8" : (isTriageMode && maxScore >= 0 ? "#94a3b8" : "#38bdf8"));
+      const txtCnt = svgEl("text", { class: "geo-badge-sub", style: `fill: ${subColor}; font-size: 8.5px;`, x: String(extra.cx), y: String(extra.cy + 9) }, subLabel);
+      gBadge.append(rect, txtCode, txtCnt);
+      gBadge.addEventListener("click", () => {
+        applyGeoFilterSelection({ type: "country", code: code, name: `${extra.name} (${code})`, count: cnt });
+      });
+      gBadges.append(gBadge);
+    }
+  }
+
+  svg.append(gPaths, gBadges);
+  container.append(svg);
+}
+
+function renderRemoteChips(remoteCounts, remoteScores) {
+  const bar = document.getElementById("remote-chips-bar");
+  if (!bar) return;
+  bar.replaceChildren();
+
+  const chips = [
+    { code: "REMOTO_BR", name: "Remoto Brasil", count: remoteCounts["REMOTO_BR"] || 0, score: remoteScores["REMOTO_BR"] || -1 },
+    { code: "EU_REMOTE", name: "Remoto Europa", count: remoteCounts["EU_REMOTE"] || 0, score: remoteScores["EU_REMOTE"] || -1 },
+    { code: "GLOBAL_REMOTE", name: "Remoto Global / EUA", count: remoteCounts["GLOBAL_REMOTE"] || 0, score: remoteScores["GLOBAL_REMOTE"] || -1 }
+  ];
+
+  chips.forEach((c) => {
+    const isActive = activeGeoFilter && activeGeoFilter.type === "remote" && activeGeoFilter.code === c.code;
+    const isHighFit = isTriageMode && c.score >= 75;
+    let label = `${c.name}: ${c.count} vaga(s)`;
+    if (isTriageMode && c.score >= 0) label += ` (${c.score}p)`;
+
+    const btn = el("button", {
+      type: "button",
+      class: "remote-chip" + (isActive ? " active" : ""),
+      style: isHighFit && !isActive ? "border-color: #10b981; color: #34d399;" : "",
+      text: label,
+      onclick: () => {
+        applyGeoFilterSelection({ type: "remote", code: c.code, name: c.name, count: c.count });
+      }
+    });
+    bar.append(btn);
+  });
+}
+
+function updateGeoMapData() {
+  if (!geoData) return;
+
+  renderMapLegend();
+  const baseRows = getBaseFilteredResults();
+  const brCounts = {};
+  const worldCounts = {};
+  const brScores = {};
+  const worldScores = {};
+  const remoteCounts = { REMOTO_BR: 0, EU_REMOTE: 0, GLOBAL_REMOTE: 0 };
+  const remoteScores = { REMOTO_BR: -1, EU_REMOTE: -1, GLOBAL_REMOTE: -1 };
+
+  for (const r of baseRows) {
+    const geo = resolveGeo(r);
+    const score = (r.screening && typeof r.screening.score === "number") ? r.screening.score : -1;
+
+    if (geo.remoteBucket) {
+      remoteCounts[geo.remoteBucket] = (remoteCounts[geo.remoteBucket] || 0) + 1;
+      if (score > remoteScores[geo.remoteBucket]) remoteScores[geo.remoteBucket] = score;
+    }
+
+    if (geo.countryCode === "BR") {
+      worldCounts["BR"] = (worldCounts["BR"] || 0) + 1;
+      if (score > (worldScores["BR"] || -1)) worldScores["BR"] = score;
+      if (geo.code && geo.code !== "REMOTO_BR") {
+        brCounts[geo.code] = (brCounts[geo.code] || 0) + 1;
+        if (score > (brScores[geo.code] || -1)) brScores[geo.code] = score;
+      }
+    } else if (geo.countryCode && geo.countryCode !== "GLOBAL_REMOTE" && geo.countryCode !== "EU_REMOTE") {
+      worldCounts[geo.countryCode] = (worldCounts[geo.countryCode] || 0) + 1;
+      if (score > (worldScores[geo.countryCode] || -1)) worldScores[geo.countryCode] = score;
+    }
+  }
+
+  renderBrasilMap(geoData.brasil || {}, brCounts, brScores);
+  renderWorldMap(geoData.world || {}, worldCounts, worldScores);
+  renderRemoteChips(remoteCounts, remoteScores);
+  renderDynamicAnalytics();
+}
+
+function renderDynamicAnalytics() {
+  const affinityPanel = document.getElementById("affinity-panel");
+  const chartsPanel = document.getElementById("charts-panel");
+
+  const baseRows = getBaseFilteredResults();
+  if (!results || results.length === 0 || baseRows.length === 0) {
+    if (affinityPanel) affinityPanel.hidden = true;
+    if (chartsPanel) chartsPanel.hidden = true;
+    return;
+  }
+
+  if (affinityPanel) affinityPanel.hidden = false;
+  if (chartsPanel) chartsPanel.hidden = false;
+
+  // Agrupar vagas por polo geográfico para Polos de Afinidade e Gráficos
+  const hubs = {};
+  const portalsCount = {};
+  let highFitCount = 0;
+  let remoteCount = 0;
+  let hybridCount = 0;
+  let onsiteCount = 0;
+
+  for (const r of baseRows) {
+    const geo = resolveGeo(r);
+    const hubKey = geo.countryCode === "BR" ? (geo.code === "REMOTO_BR" ? "REMOTO_BR" : `BR_${geo.code}`) : geo.code;
+    const hubLabel = geo.countryCode === "BR"
+      ? (geo.code === "REMOTO_BR" ? "Brasil (100% Remoto)" : `Brasil · ${geo.label}`)
+      : geo.label;
+    const filterType = geo.countryCode === "BR"
+      ? (geo.code === "REMOTO_BR" ? "remote" : "uf")
+      : (geo.isRemote && (geo.code === "GLOBAL_REMOTE" || geo.code === "EU_REMOTE") ? "remote" : "country");
+
+    if (!hubs[hubKey]) {
+      hubs[hubKey] = {
+        key: hubKey,
+        code: geo.code,
+        countryCode: geo.countryCode,
+        filterType: filterType,
+        label: hubLabel,
+        count: 0,
+        scores: [],
+        companies: new Set(),
+        sampleTitles: []
+      };
+    }
+    hubs[hubKey].count += 1;
+    if (r.company) hubs[hubKey].companies.add(r.company);
+    if (r.title && hubs[hubKey].sampleTitles.length < 2) hubs[hubKey].sampleTitles.push(r.title);
+    if (r.screening && typeof r.screening.score === "number") {
+      hubs[hubKey].scores.push(r.screening.score);
+      if (r.screening.score >= 75) highFitCount += 1;
+    }
+
+    const pName = portalName(r.portal);
+    portalsCount[pName] = (portalsCount[pName] || 0) + 1;
+
+    if (r.workplace_type === "remote" || geo.isRemote) remoteCount += 1;
+    else if (r.workplace_type === "hybrid") hybridCount += 1;
+    else onsiteCount += 1;
+  }
+
+  const hubList = Object.values(hubs).map((h) => {
+    const avgScore = h.scores.length ? Math.round(h.scores.reduce((a, b) => a + b, 0) / h.scores.length) : null;
+    const maxScore = h.scores.length ? Math.max(...h.scores) : null;
+    const rankScore = h.count * 10 + (maxScore || 65);
+    return { ...h, avgScore, maxScore, rankScore };
+  }).sort((a, b) => b.rankScore - a.rankScore);
+
+  // Renderizar Polos com Maior Afinidade com seu Currículo (Top 4)
+  const affGrid = document.getElementById("affinity-grid");
+  if (affGrid) {
+    affGrid.replaceChildren();
+    hubList.slice(0, 4).forEach((h) => {
+      const compSample = [...h.companies].slice(0, 3).join(", ") || "Empresas de Tecnologia";
+      const scoreText = h.avgScore != null ? `Nota média ${h.avgScore}/100 (máx ${h.maxScore})` : `${h.count} vaga(s) compatíveis`;
+      const cardEl = el("div", {
+        class: "affinity-card",
+        style: "cursor: pointer; transition: transform 0.15s, border-color 0.15s;",
+        onclick: () => {
+          if (h.countryCode === "BR" && h.filterType === "uf") {
+            switchMapView("brasil");
+          } else if (h.filterType === "country") {
+            switchMapView("world");
+          }
+          applyGeoFilterSelection({ type: h.filterType, code: h.code, name: h.label, count: h.count });
+        }
+      },
+        el("div", { class: "affinity-title", text: h.label }),
+        el("div", { class: "affinity-desc", text: `Destaques: ${compSample}. Cargos como ${h.sampleTitles.join(" / ") || "Engenharia de Software"}.` }),
+        el("span", { class: "affinity-tag", text: `${h.count} vaga(s) · ${scoreText}` })
+      );
+      affGrid.append(cardEl);
+    });
+  }
+
+  // Atualizar KPIs
+  const byCount = [...hubList].sort((a, b) => b.count - a.count);
+  document.getElementById("kpi-search-total").textContent = formatNumber(baseRows.length);
+  document.getElementById("kpi-search-locations").textContent = formatNumber(byCount.length);
+  if (byCount.length > 0) {
+    document.getElementById("kpi-search-leader").textContent = `${byCount[0].label} (${byCount[0].count})`;
+  } else {
+    document.getElementById("kpi-search-leader").textContent = "-";
+  }
+  const kpiHighLbl = document.getElementById("kpi-search-highfit-lbl");
+  const kpiHighSub = document.getElementById("kpi-search-highfit-sub");
+  if (kpiHighLbl && kpiHighSub) {
+    if (isTriageMode) {
+      kpiHighLbl.textContent = "Alta Afinidade (Nota 75+)";
+      kpiHighSub.textContent = "Alinhadas ao seu currículo";
+      document.getElementById("kpi-search-highfit").textContent = formatNumber(highFitCount);
+    } else {
+      kpiHighLbl.textContent = "Vagas na Seleção";
+      kpiHighSub.textContent = "Total mapeado na busca";
+      document.getElementById("kpi-search-highfit").textContent = formatNumber(baseRows.length);
+    }
+  } else {
+    document.getElementById("kpi-search-highfit").textContent = formatNumber(highFitCount);
+  }
+
+  const wpTitle = document.getElementById("chart-workplace-title");
+  if (wpTitle) wpTitle.textContent = isTriageMode ? "Modelo de Trabalho e Notas" : "Modelo de Trabalho";
+
+  // Gráficos de barras dinâmicos
+  renderBarChart(
+    "chart-locations",
+    byCount.slice(0, 8).map((h) => ({ label: h.label, count: h.count })),
+    "count",
+    "label"
+  );
+
+  const workplaceItems = [
+    { label: "Trabalho Remoto", count: remoteCount },
+    { label: "Modelo Híbrido", count: hybridCount },
+    { label: "Presencial / Não inf.", count: onsiteCount }
+  ];
+  if (isTriageMode && highFitCount > 0) {
+    workplaceItems.push({ label: "Nota Alta (75+)", count: highFitCount });
+  }
+  renderBarChart("chart-workplace", workplaceItems, "count", "label", baseRows.length);
+
+  const portalItems = Object.entries(portalsCount)
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count);
+  renderBarChart("chart-portals", portalItems, "count", "label");
+}
+
+// ---- vagas novas unificadas ----
+const filterIds = ["f-text", "f-model", "f-portal", "f-days", "f-score", "f-nowarn", "f-region", "f-sort"];
+const filters = filterIds.map((id) => document.getElementById(id)).filter(Boolean);
+const onFilterChange = () => {
+  const scoreFilter = document.getElementById("f-score");
+  if (scoreFilter && scoreFilter.value) {
+    isTriageMode = true;
+  }
+  renderResults();
+  updateGeoMapData();
+};
+filters.forEach((f) => {
+  f.addEventListener("input", onFilterChange);
+  f.addEventListener("change", onFilterChange);
+});
 
 async function loadResults() {
   const data = await api("/api/results");
   results = data.new || [];
   const sel = document.getElementById("f-portal");
-  const current = sel.value;
-  sel.replaceChildren(el("option", { value: "", text: "Todos os portais" }),
-    ...[...new Set(results.map((r) => r.portal))].sort().map((p) => el("option", { value: p, text: portalName(p) })));
-  sel.value = current;
+  if (sel) {
+    const current = sel.value;
+    sel.replaceChildren(el("option", { value: "", text: "Todos os portais" }),
+      ...[...new Set(results.map((r) => r.portal))].sort().map((p) => el("option", { value: p, text: portalName(p) })));
+    sel.value = current;
+  }
   const cntNew = document.getElementById("count-new");
   if (cntNew) {
     cntNew.textContent = results.length ? String(results.length) : "";
     cntNew.style.display = results.length ? "inline-block" : "none";
   }
+  const subCnt = document.getElementById("sub-vagas-count");
+  if (subCnt) {
+    subCnt.textContent = results.length ? String(results.length) : "";
+    subCnt.style.display = results.length ? "inline-block" : "none";
+  }
   renderResults();
+  if (geoData) {
+    updateGeoMapData();
+  } else {
+    initGeoMap().then(updateGeoMapData);
+  }
 }
 
 const selectedUrls = new Set();
 let currentVisibleRows = [];
+
+function syncCheckAllState() {
+  const isAll = currentVisibleRows.length > 0 && currentVisibleRows.every((r) => selectedUrls.has(r.url));
+  const c1 = document.getElementById("check-all");
+  const c2 = document.getElementById("check-all-map");
+  if (c1) c1.checked = isAll;
+  if (c2) c2.checked = isAll;
+}
 
 function card(row, decide) {
   const chips = el("div", { class: "chips" });
@@ -646,10 +1795,7 @@ function card(row, decide) {
   const check = el("input", { type: "checkbox", value: row.url, checked: selectedUrls.has(row.url), onchange: (e) => {
     if (e.target.checked) selectedUrls.add(row.url);
     else selectedUrls.delete(row.url);
-    const checkAll = document.getElementById("check-all");
-    if (checkAll) {
-      checkAll.checked = currentVisibleRows.length > 0 && currentVisibleRows.every((r) => selectedUrls.has(r.url));
-    }
+    syncCheckAllState();
   } });
 
   const topRow = el("div", { class: "card-top" },
@@ -664,40 +1810,70 @@ function card(row, decide) {
     chips,
     warn ? el("div", { class: "warn", text: "[Aviso] " + warn }) : null,
     el("div", { class: "actions" },
-      decide ? el("button", { class: "btn small", onclick: () => decide(row, "interesse"), text: "Me interessa" }) : null,
+      decide ? el("button", {
+        class: "btn small",
+        onclick: async (e) => {
+          const b = e.target;
+          b.disabled = true;
+          b.textContent = "Salvando…";
+          await decide(row, "interesse");
+        },
+        text: "Me interessa"
+      }) : null,
       decide ? el("button", { class: "btn small secondary", onclick: () => decide(row, "descartar"), text: "Descartar" }) : null,
       full ? el("a", { class: "btn small secondary", href: full, target: "_blank", rel: "noopener noreferrer", text: "Vaga na empresa" }) : null,
       url ? el("a", { class: "right-link", href: url, target: "_blank", rel: "noopener noreferrer", text: "Ver anúncio no portal" }) : null));
 }
 
 function renderResults() {
-  const [text, model, portal, days, scoreFilter, nowarn] = [
-    filters[0].value.toLowerCase(),
-    filters[1].value,
-    filters[2].value,
-    filters[3].value,
-    filters[4].value,
-    filters[5].checked
-  ];
+  const text = (document.getElementById("f-text") ? document.getElementById("f-text").value : "").toLowerCase();
+  const model = document.getElementById("f-model") ? document.getElementById("f-model").value : "";
+  const portal = document.getElementById("f-portal") ? document.getElementById("f-portal").value : "";
+  const days = document.getElementById("f-days") ? document.getElementById("f-days").value : "";
+  const scoreFilter = document.getElementById("f-score") ? document.getElementById("f-score").value : "";
+  const nowarn = document.getElementById("f-nowarn") ? document.getElementById("f-nowarn").checked : false;
+  const regionVal = document.getElementById("f-region") ? document.getElementById("f-region").value : "";
+
   const maxDays = days ? Number(days) : null;
   const today = new Date();
   today.setHours(23, 59, 59, 999);
-  const fold = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-  let rows = results.filter((r) =>
-    (!text || fold(`${r.title} ${r.company}`).includes(fold(text))) &&
-    (!model || (model === "none" ? !r.workplace_type : r.workplace_type === model)) &&
-    (!portal || r.portal === portal) &&
-    (!nowarn || !warningOf(r)) &&
-    (!maxDays || (r.date && Math.floor((today - new Date(r.date + "T00:00:00")) / 86400000) <= maxDays)) &&
-    (!scoreFilter || (
-      scoreFilter === "triadas" ? (r.screening && typeof r.screening.score === "number") :
-      scoreFilter === "high" ? (r.screening && r.screening.score >= 80) :
-      scoreFilter === "med" ? (r.screening && r.screening.score >= 60) :
-      scoreFilter === "low" ? (r.screening && r.screening.score < 60) : true
-    )));
+  const fold = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+  let rows = results.filter((r) => {
+    const geo = resolveGeo(r);
+
+    if (activeGeoFilter) {
+      if (activeGeoFilter.type === "remote") {
+        if (geo.remoteBucket !== activeGeoFilter.code && geo.code !== activeGeoFilter.code) return false;
+      } else if (activeGeoFilter.type === "uf") {
+        if (geo.countryCode !== "BR" || geo.code !== activeGeoFilter.code) return false;
+      } else if (activeGeoFilter.type === "country") {
+        if (geo.countryCode !== activeGeoFilter.code) return false;
+      }
+    }
+
+    if (regionVal) {
+      if (regionVal === "remote" && !geo.isRemote) return false;
+      if (regionVal === "brasil" && geo.scope !== "brasil") return false;
+      if (regionVal === "europa" && geo.scope !== "europa") return false;
+      if (regionVal === "global" && geo.scope !== "global") return false;
+    }
+
+    return (!text || fold(`${r.title} ${r.company} ${r.location || ""}`).includes(fold(text))) &&
+      (!model || (model === "none" ? !r.workplace_type : r.workplace_type === model)) &&
+      (!portal || r.portal === portal) &&
+      (!nowarn || !warningOf(r)) &&
+      (!maxDays || (r.date && Math.floor((today - new Date(r.date + "T00:00:00")) / 86400000) <= maxDays)) &&
+      (!scoreFilter || (
+        scoreFilter === "triadas" ? (r.screening && typeof r.screening.score === "number") :
+        scoreFilter === "high" ? (r.screening && r.screening.score >= 80) :
+        scoreFilter === "med" ? (r.screening && r.screening.score >= 60) :
+        scoreFilter === "low" ? (r.screening && r.screening.score < 60) : true
+      ));
+  });
 
   const sortBy = document.getElementById("f-sort") ? document.getElementById("f-sort").value : "date";
-  if (sortBy === "score-desc" || sortBy === "score") {
+  if (sortBy === "score-desc") {
     rows.sort((a, b) => {
       const sa = (a.screening && typeof a.screening.score === "number") ? a.screening.score : -1;
       const sb = (b.screening && typeof b.screening.score === "number") ? b.screening.score : -1;
@@ -715,18 +1891,39 @@ function renderResults() {
   }
 
   currentVisibleRows = rows;
-  const checkAll = document.getElementById("check-all");
-  if (checkAll) {
-    checkAll.checked = currentVisibleRows.length > 0 && currentVisibleRows.every((r) => selectedUrls.has(r.url));
+  syncCheckAllState();
+
+  const subCnt = document.getElementById("sub-vagas-count");
+  if (subCnt) {
+    subCnt.textContent = rows.length ? String(rows.length) : "";
+    subCnt.style.display = rows.length ? "inline-block" : "none";
+  }
+
+  // Atualizar painel imediato de vagas filtradas abaixo do mapa quando um local é clicado
+  const mapJobsPanel = document.getElementById("map-filtered-jobs-panel");
+  const mapJobsTitle = document.getElementById("map-filtered-jobs-title");
+  const mapJobsList = document.getElementById("map-filtered-jobs-list");
+  if (mapJobsPanel && mapJobsList) {
+    if (activeGeoFilter) {
+      mapJobsPanel.hidden = false;
+      if (mapJobsTitle) {
+        mapJobsTitle.textContent = `Vagas em ${activeGeoFilter.name} (${rows.length} encontrada(s))`;
+      }
+      mapJobsList.replaceChildren(...(rows.length
+        ? rows.map((r) => card(r, decide))
+        : [el("p", { class: "empty", text: "Nenhuma vaga encontrada para esta localidade com os filtros atuais." })]));
+    } else {
+      mapJobsPanel.hidden = true;
+      mapJobsList.replaceChildren();
+    }
   }
 
   const box = document.getElementById("vagas");
   document.getElementById("vagas-info").textContent = results.length
-    ? `${rows.length} de ${results.length} vagas novas. "Me interessa" e "Descartar" tiram a vaga desta lista e das próximas buscas.` : "";
+    ? `${rows.length} de ${results.length} vagas encontradas.` : "";
   box.replaceChildren(...(rows.length ? rows.map((r) => card(r, decide))
-    : [el("p", { class: "empty", text: results.length ? "Nenhuma vaga com esses filtros." : "Nenhuma vaga nova ainda. Rode uma busca na aba Buscar." })]));
+    : [el("p", { class: "empty", text: results.length ? "Nenhuma vaga com esses filtros." : "Nenhuma vaga encontrada ainda. Inicie uma busca no painel acima." })]));
 }
-
 
 let batchPolling = null;
 
@@ -734,21 +1931,22 @@ async function checkBatchStatus() {
   try {
     const st = (await api("/api/status")).batch;
     const bSpan = document.getElementById("batch-status");
-    if (!bSpan) return;
+    const bSpanMap = document.getElementById("batch-status-map");
+    const updateBatchText = (...nodes) => {
+      if (bSpan) bSpan.replaceChildren(...nodes.map((n) => typeof n === "string" ? n : n.cloneNode(true)));
+      if (bSpanMap) bSpanMap.replaceChildren(...nodes.map((n) => typeof n === "string" ? n : n.cloneNode(true)));
+    };
     if (st && st.running) {
-      bSpan.replaceChildren(el("span", { class: "spinner", "aria-hidden": "true" }), ` Triando ${st.current} de ${st.total}: ${st.current_title.slice(0, 30)}…`);
+      updateBatchText(el("span", { class: "spinner", "aria-hidden": "true" }), ` Triando ${st.current} de ${st.total}: ${st.current_title.slice(0, 30)}…`);
       if (st.results && Object.keys(st.results).length > 0) {
         let hasNew = false;
         for (const [u, screenData] of Object.entries(st.results)) {
-          if (screenData.score < 40 || screenData.discarded || screenData.score >= 65 || screenData.interested) {
+          if (screenData.score < 40 || screenData.discarded) {
             const idx = results.findIndex((r) => r.url === u);
             if (idx !== -1) {
               results.splice(idx, 1);
               selectedUrls.delete(u);
               hasNew = true;
-            }
-            if (screenData.score >= 65 || screenData.interested) {
-              loadSaved();
             }
           } else {
             const row = results.find((r) => r.url === u);
@@ -768,48 +1966,37 @@ async function checkBatchStatus() {
           }
         }
         if (hasNew) {
-          document.getElementById("count-new").textContent = results.length ? `(${results.length})` : "";
+          const cntNew = document.getElementById("count-new");
+          if (cntNew) cntNew.textContent = results.length ? String(results.length) : "";
           renderResults();
+          updateGeoMapData();
         }
       }
     } else {
       if (batchPolling) { clearInterval(batchPolling); batchPolling = null; }
       if (st && st.total > 0 && !st.running) {
-        bSpan.textContent = `Triagem de ${st.total} vagas concluída!`;
+        updateBatchText(`Triagem de ${st.total} vagas concluída!`);
         loadResults();
       }
     }
   } catch {}
 }
 
-document.getElementById("f-sort") && document.getElementById("f-sort").addEventListener("change", renderResults);
 
-document.getElementById("check-all") && document.getElementById("check-all").addEventListener("change", (e) => {
-  const isChecked = e.target.checked;
-  currentVisibleRows.forEach((r) => {
-    if (isChecked) selectedUrls.add(r.url);
-    else selectedUrls.delete(r.url);
-  });
-  const checks = document.querySelectorAll("#vagas input[type=checkbox]");
-  checks.forEach((c) => {
-    c.checked = isChecked;
-  });
-});
 
-document.getElementById("btn-batch") && document.getElementById("btn-batch").addEventListener("click", async () => {
-  const scope = document.getElementById("batch-scope").value;
+async function triggerBatchTriage(scopeValue) {
   let targetUrls = [];
   const visibleUrls = currentVisibleRows.map((r) => r.url);
-  if (scope === "selected") {
+  if (scopeValue === "selected") {
     targetUrls = visibleUrls.filter((u) => selectedUrls.has(u));
     if (!targetUrls.length) {
       alert("Nenhuma vaga da lista filtrada foi selecionada com checkbox.");
       return;
     }
-  } else if (scope === "all-visible") {
+  } else if (scopeValue === "all-visible") {
     targetUrls = visibleUrls;
   } else {
-    const count = parseInt(scope, 10) || 5;
+    const count = parseInt(scopeValue, 10) || 5;
     targetUrls = visibleUrls.slice(0, count);
   }
   if (!targetUrls.length) {
@@ -817,19 +2004,117 @@ document.getElementById("btn-batch") && document.getElementById("btn-batch").add
     return;
   }
   try {
+    isTriageMode = true;
+    updateGeoMapData();
     await api("/api/batch-screen", { urls: targetUrls });
-    document.getElementById("batch-status").replaceChildren(el("span", { class: "spinner" }), ` Iniciando triagem de ${targetUrls.length} vagas…`);
-    if (!batchPolling) batchPolling = setInterval(checkBatchStatus, 1500); checkBatchStatus();
+    const msg = ` Iniciando triagem de ${targetUrls.length} vagas…`;
+    const bSpan1 = document.getElementById("batch-status");
+    const bSpan2 = document.getElementById("batch-status-map");
+    if (bSpan1) bSpan1.replaceChildren(el("span", { class: "spinner" }), msg);
+    if (bSpan2) bSpan2.replaceChildren(el("span", { class: "spinner" }), msg);
+    if (!batchPolling) batchPolling = setInterval(checkBatchStatus, 1500);
+    checkBatchStatus();
   } catch (err) { alert("Não consegui iniciar triagem: " + err.message); }
+}
+
+document.getElementById("btn-batch") && document.getElementById("btn-batch").addEventListener("click", () => {
+  triggerBatchTriage(document.getElementById("batch-scope").value);
+});
+
+document.getElementById("btn-batch-map") && document.getElementById("btn-batch-map").addEventListener("click", () => {
+  triggerBatchTriage(document.getElementById("batch-scope-map").value);
+});
+
+document.getElementById("btn-clear-pending-map") && document.getElementById("btn-clear-pending-map").addEventListener("click", () => {
+  document.getElementById("btn-clear-pending").click();
+});
+
+function handleCheckAllToggle(isChecked) {
+  currentVisibleRows.forEach((r) => {
+    if (isChecked) selectedUrls.add(r.url);
+    else selectedUrls.delete(r.url);
+  });
+  const checks = document.querySelectorAll("#vagas input[type=checkbox], #map-filtered-jobs-list input[type=checkbox]");
+  checks.forEach((c) => { c.checked = isChecked; });
+  syncCheckAllState();
+}
+
+document.getElementById("check-all") && document.getElementById("check-all").addEventListener("change", (e) => {
+  handleCheckAllToggle(e.target.checked);
+});
+
+document.getElementById("check-all-map") && document.getElementById("check-all-map").addEventListener("change", (e) => {
+  handleCheckAllToggle(e.target.checked);
 });
 
 async function decide(row, decision) {
   try {
     await api("/api/mark", { urls: [row.url], decision });
     results = results.filter((r) => r.url !== row.url);
-    document.getElementById("count-new").textContent = results.length ? `(${results.length})` : "";
+    const cntNew = document.getElementById("count-new");
+    if (cntNew) {
+      cntNew.textContent = results.length ? String(results.length) : "";
+      cntNew.style.display = results.length ? "inline-block" : "none";
+    }
     renderResults();
+    updateGeoMapData();
+    loadSaved();
+    loadDiscarded();
   } catch (e) { alert("Não consegui gravar: " + e.message); }
+}
+
+// Subabas: Mapa Mundial vs Lista de Vagas
+const btnSubtabMapa = document.getElementById("btn-subtab-mapa");
+const btnSubtabLista = document.getElementById("btn-subtab-lista");
+const subtabContentMapa = document.getElementById("subtab-content-mapa");
+const subtabContentLista = document.getElementById("subtab-content-lista");
+
+function switchSubtab(tabName) {
+  if (tabName === "mapa") {
+    btnSubtabMapa.classList.add("active");
+    btnSubtabLista.classList.remove("active");
+    subtabContentMapa.hidden = false;
+    subtabContentLista.hidden = true;
+    if (geoData) updateGeoMapData();
+    else initGeoMap().then(updateGeoMapData);
+  } else {
+    btnSubtabLista.classList.add("active");
+    btnSubtabMapa.classList.remove("active");
+    subtabContentLista.hidden = false;
+    subtabContentMapa.hidden = true;
+    renderResults();
+  }
+}
+
+if (btnSubtabMapa && btnSubtabLista) {
+  btnSubtabMapa.addEventListener("click", () => switchSubtab("mapa"));
+  btnSubtabLista.addEventListener("click", () => switchSubtab("lista"));
+}
+
+const btnViewFilteredJobs = document.getElementById("btn-view-filtered-jobs");
+if (btnViewFilteredJobs) {
+  btnViewFilteredJobs.addEventListener("click", () => {
+    switchSubtab("lista");
+  });
+}
+
+const btnClearGeoFilter = document.getElementById("btn-clear-geo-filter");
+if (btnClearGeoFilter) {
+  btnClearGeoFilter.addEventListener("click", () => {
+    activeGeoFilter = null;
+    document.getElementById("map-filter-indicator").textContent = "Todas as localidades";
+    btnClearGeoFilter.style.display = "none";
+    renderResults();
+    updateGeoMapData();
+  });
+}
+
+const btnToggleLegendMode = document.getElementById("btn-toggle-legend-mode");
+if (btnToggleLegendMode) {
+  btnToggleLegendMode.addEventListener("click", () => {
+    isTriageMode = !isTriageMode;
+    updateGeoMapData();
+  });
 }
 
 // ---- markdown das respostas do Claude, montado nó a nó (nunca como HTML) ----
@@ -1508,6 +2793,9 @@ function renderDiscarded() {
 
 document.getElementById("f-discarded-text") && document.getElementById("f-discarded-text").addEventListener("input", renderDiscarded);
 
+// Inicialização imediata do mapa mundi (mesmo vazio, sem disparar busca ou pré-carregar vagas)
+initGeoMap();
+
 refreshStatus().then(() => api("/api/status")).then((s) => {
   if (s.search.running) polling = setInterval(refreshStatus, 2000);
   claude = s.claude;
@@ -1518,6 +2806,7 @@ refreshStatus().then(() => api("/api/status")).then((s) => {
   loadDiscarded();
   return api("/api/profile");
 }).then((p) => { if (p && !p.ready) show("perfil"); });
+
 </script>
 </body>
 </html>

@@ -7,6 +7,7 @@ import sys
 import tempfile
 import threading
 import unittest
+from unittest.mock import patch
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
@@ -42,6 +43,13 @@ class Data(unittest.TestCase):
         entry = next(iter(json.loads(self.seen.read_text(encoding="utf-8"))["seen"].values()))
         self.assertEqual((entry["title"], entry["fit"], entry["status"], entry["source"]),
                          ("Product Manager", "medium", "new", "painel"))
+
+    def test_mark_with_job_data_for_external_source(self):
+        job_data = {"url": "https://europa.eu/eures/portal/jv-se/jv-details/123", "title": "AI Engineer", "company": "Tech Corp", "portal": "eures"}
+        out = painel.mark(None, [job_data["url"]], "interesse", self.seen, job_data=job_data)
+        self.assertEqual((out["added"], out["missing"]), (1, []))
+        entry = next(iter(json.loads(self.seen.read_text(encoding="utf-8"))["seen"].values()))
+        self.assertEqual((entry["title"], entry["company"], entry["portal"]), ("AI Engineer", "Tech Corp", "eures"))
 
     def test_discard_is_low_and_skipped(self):
         painel.mark(RESULTS, ["https://remotar.com.br/job/2"], "descartar", self.seen)
@@ -134,7 +142,7 @@ class Server(unittest.TestCase):
     def setUpClass(cls):
         cls.tmp = tempfile.TemporaryDirectory()
         cls.token = "t0k3n"
-        job = painel.SearchJob(Path(cls.tmp.name) / "busca.json")
+        cls.job = job = painel.SearchJob(Path(cls.tmp.name) / "busca.json")
         cls.server = ThreadingHTTPServer(("127.0.0.1", 0), None)
         cls.port = cls.server.server_address[1]
         tmp = Path(cls.tmp.name)
@@ -219,14 +227,46 @@ class Server(unittest.TestCase):
         status, data, _ = self.request("POST", "/api/clear-pending", {}, h)
         self.assertEqual(status, 200)
         self.assertIn("cleared", json.loads(data))
-        status, data, _ = self.request("POST", "/api/search", {"all": True, "jobage": 2}, h)
-        self.assertEqual(status, 202)
+        with patch.object(self.job, "start", return_value=True):
+            status, data, _ = self.request("POST", "/api/search", {"all": True, "jobage": 2}, h)
+            self.assertEqual(status, 202)
         status, data, _ = self.request("GET", "/api/discarded")
         self.assertEqual(status, 200)
         self.assertIn("discarded", json.loads(data))
         status, data, _ = self.request("GET", "/api/documents")
         self.assertEqual(status, 200)
         self.assertIn("documents", json.loads(data))
+
+    def test_geo_endpoint_returns_brasil_and_world_geodata(self):
+        status, data, res = self.request("GET", "/api/geo")
+        self.assertEqual(status, 200)
+        self.assertIn("application/json", res.getheader("Content-Type"))
+        parsed = json.loads(data)
+        self.assertIn("brasil", parsed)
+        self.assertIn("world", parsed)
+        self.assertEqual(len(parsed["brasil"]), 27)
+        self.assertIn("SP", parsed["brasil"])
+        self.assertIn("BR", parsed["world"])
+        self.assertIn("DE", parsed["world"])
+        self.assertIn("US", parsed["world"])
+
+    def test_search_focus_modes(self):
+        h = {"X-Painel-Token": self.token, "Content-Type": "application/json"}
+        with patch.object(self.job, "start", return_value=True) as mock_start:
+            status, _, _ = self.request("POST", "/api/search", {"focus": "europa", "jobage": 2}, h)
+            self.assertEqual(status, 202)
+            mock_start.assert_called_with([], 2, all_prios=False, focus="europa")
+
+            status, _, _ = self.request("POST", "/api/search", {"focus": "google", "jobage": 2}, h)
+            self.assertEqual(status, 202)
+            mock_start.assert_called_with([], 2, all_prios=False, focus="google")
+
+    def test_eures_stats_route(self):
+        with patch("eures.get_eures_stats", return_value={"total_europe_jobs": 1967000, "total_tech_jobs": 66000}):
+            status, data, _ = self.request("GET", "/api/eures/stats")
+            self.assertEqual(status, 200)
+            parsed = json.loads(data)
+            self.assertEqual(parsed["total_europe_jobs"], 1967000)
 
 
 class Page(unittest.TestCase):
@@ -235,6 +275,13 @@ class Page(unittest.TestCase):
         for sink in ("innerHTML", "outerHTML", "insertAdjacentHTML", "document.write", "eval("):
             self.assertNotIn(sink, page)
         self.assertIn('rel: "noopener noreferrer"', page)
+
+    def test_map_legend_and_triage_mode_elements(self):
+        page = painel.PAGE.read_text(encoding="utf-8")
+        self.assertIn('id="map-legend-items"', page)
+        self.assertIn("function renderMapLegend", page)
+        self.assertIn("isTriageMode", page)
+        self.assertNotIn("Alta Afinidade (Nota 75+)", page[:page.find("<script")])
 
 
 if __name__ == "__main__":

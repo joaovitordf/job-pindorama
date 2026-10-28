@@ -197,15 +197,18 @@ def unseen(results: dict | None, seen_path: Path = scrape_run.SEEN, tracker_path
     return {**results, "new": rows}
 
 
-def mark(results: dict | None, urls: list, decision: str, seen_path: Path = scrape_run.SEEN) -> dict:
+def mark(results: dict | None, urls: list, decision: str, seen_path: Path = scrape_run.SEEN,
+         job_data: dict | None = None) -> dict:
     """Grava a decisão das vagas escolhidas, achadas pela URL no arquivo da busca.
 
-    A página manda só URLs: os campos gravados vêm do arquivo da busca, nunca do
-    navegador.
+    Quando a vaga é externa (ex: EURES ou Google Careers), job_data pode ser fornecido
+    para cadastrar os metadados da vaga caso ela não esteja em results.
     """
     if decision not in DECISIONS:
         raise ValueError(f"decisão desconhecida: {decision}")
     by_url = {r.get("url"): r for r in (results or {}).get("new", []) if isinstance(r, dict) and r.get("url")}
+    if job_data and isinstance(job_data, dict) and job_data.get("url"):
+        by_url[job_data["url"]] = job_data
     rows, missing = [], []
     for url in urls:
         row = by_url.get(url)
@@ -635,12 +638,18 @@ class SearchJob:
         with self.lock:
             return {"running": self.running, "started": self.started, "error": self.error, "summary": self.summary}
 
-    def start(self, prios: list, jobage: int, all_prios: bool = False) -> bool:
+    def start(self, prios: list, jobage: int, all_prios: bool = False, focus: str = "all") -> bool:
         with self.lock:
             if self.running:
                 return False
             self.running, self.error, self.summary = True, None, None
             self.started = datetime.now().isoformat(timespec="seconds")
+        if focus == "google":
+            threading.Thread(target=self._run_google, daemon=True).start()
+            return True
+        if focus == "europa":
+            threading.Thread(target=self._run_europa, daemon=True).start()
+            return True
         cmd = [sys.executable, str(ROOT / "tools" / "scrape_run.py"), "search"]
         if all_prios or not prios:
             cmd.append("--all")
@@ -653,17 +662,87 @@ class SearchJob:
         local_accept = scrape_run.local_target_seniority()
         if local_accept:
             cmd.extend(["--accept", ",".join(local_accept)])
-        threading.Thread(target=self._run, args=(cmd,), daemon=True).start()
+        threading.Thread(target=self._run, args=(cmd, focus), daemon=True).start()
         return True
 
-    def _run(self, cmd: list) -> None:
+    def _merge_external_jobs(self, new_jobs: list[dict], portal_tag: str) -> int:
+        existing_data = {"meta": {"count": 0}, "new": []}
+        if self.out.exists():
+            try:
+                existing_data = json.loads(self.out.read_text(encoding="utf-8"))
+            except Exception:
+                pass
+        other_jobs = [
+            r for r in existing_data.get("new", [])
+            if isinstance(r, dict) and r.get("portal") != portal_tag
+        ]
+        seen_urls = {r.get("url") for r in other_jobs if isinstance(r, dict) and r.get("url")}
+        added = []
+        for j in new_jobs:
+            if not j.get("url") or j["url"] in seen_urls:
+                continue
+            seen_urls.add(j["url"])
+            try:
+                painel_ia.save_job_cache(j["url"], j)
+            except Exception:
+                pass
+            added.append(j)
+        existing_data["new"] = added + other_jobs
+        if not isinstance(existing_data.get("meta"), dict):
+            existing_data["meta"] = {}
+        existing_data["meta"]["count"] = len(existing_data["new"])
+        self.out.parent.mkdir(parents=True, exist_ok=True)
+        self.out.write_text(json.dumps(existing_data, ensure_ascii=False, indent=2), encoding="utf-8")
+        return len(added)
+
+    def _run_europa(self) -> None:
+        try:
+            import eures
+            eu_jobs = eures.fetch_eures_for_panel(focus="all", max_per_query=15)
+            added = self._merge_external_jobs(eu_jobs, "eures")
+            with self.lock:
+                self.summary = f"Europa (EURES): {added} vagas técnicas coletadas e avaliadas com base no currículo."
+                self.error = None
+        except Exception as exc:
+            with self.lock:
+                self.error = str(exc)
+        finally:
+            with self.lock:
+                self.running = False
+
+    def _run_google(self) -> None:
+        try:
+            import google_careers
+            new_jobs = google_careers.fetch_google_careers(max_pages=2, max_workers=8)
+            added = self._merge_external_jobs(new_jobs, "google-careers")
+            with self.lock:
+                self.summary = f"Google Careers: {added} vagas coletadas e pontuadas pela descrição."
+                self.error = None
+        except Exception as exc:
+            with self.lock:
+                self.error = str(exc)
+        finally:
+            with self.lock:
+                self.running = False
+
+    def _run(self, cmd: list, focus: str = "all") -> None:
         try:
             proc = subprocess.run(cmd, capture_output=True, cwd=ROOT, timeout=1800,
                                   env={**os.environ, "PYTHONIOENCODING": "utf-8"})
             text = proc.stdout.decode("utf-8", errors="replace")
             err = proc.stderr.decode("utf-8", errors="replace").strip()
+            eu_note = ""
+            try:
+                import eures
+                eu_jobs = eures.fetch_eures_for_panel(focus=focus, max_per_query=12)
+                if eu_jobs:
+                    added_eu = self._merge_external_jobs(eu_jobs, "eures")
+                    eu_note = f"\nEuropa (EURES): +{added_eu} vagas técnicas integradas."
+            except Exception:
+                pass
             with self.lock:
-                self.summary = "\n".join(l for l in text.splitlines() if not l.startswith("saved="))
+                base_sum = "\n".join(l for l in text.splitlines() if not l.startswith("saved="))
+                self.summary = (base_sum + eu_note).strip()
                 self.error = (err or f"a busca terminou com erro ({proc.returncode})") if proc.returncode else None
         except Exception as exc:  # a página precisa saber que falhou, seja como for
             with self.lock:
@@ -671,12 +750,6 @@ class SearchJob:
         finally:
             with self.lock:
                 self.running = False
-
-    def _safe_prep_interview(self, url: str, job_data: dict | None = None) -> None:
-        try:
-            painel_ia.preparar_entrevista(url, job_data=job_data)
-        except Exception:
-            pass
 
 
 class AgentJob:
@@ -907,8 +980,6 @@ class BatchScreeningJob:
         self.current_title = ""
         self.results = {}
         self.errors = []
-        self._prep_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-        self._prep_scheduled = set()
 
     def status(self) -> dict:
         with self.lock:
@@ -952,28 +1023,14 @@ class BatchScreeningJob:
                 try:
                     res = painel_ia.triar_vaga_rapida(url, jobs_map.get(url))
                     score = res.get("score")
-                    # Descarta automaticamente da lista se a nota for baixa (< 40)
+                    # Descarta automaticamente da lista apenas se a nota for estritamente baixa (< 40)
                     if isinstance(score, (int, float)) and score < 40:
                         try:
                             mark(load_results(self.out), [url], "descartar")
                             res["discarded"] = True
                         except Exception:
                             pass
-                    # Para vagas com nota 65+, move automaticamente para "Me interessam" e prepara o dossiê em segundo plano!
-                    elif isinstance(score, (int, float)) and score >= 65:
-                        try:
-                            mark(load_results(self.out), [url], "interesse")
-                            res["interested"] = True
-                        except Exception:
-                            pass
-                        try:
-                            job_meta = jobs_map.get(url)
-                            if url not in self._prep_scheduled:
-                                self._prep_scheduled.add(url)
-                                self._prep_executor.submit(self._safe_prep_interview, url, job_meta)
-                            res["interview_ready"] = True
-                        except Exception:
-                            pass
+                    # Vagas com nota >= 40 permanecem na lista de Vagas Novas para o usuário decidir manualmente.
                     with self.lock:
                         self.results[url] = res
                         self.current_title = res.get("title") or url
@@ -989,6 +1046,9 @@ class BatchScreeningJob:
 # ---------------------------------------------------------------------------
 # HTTP
 # ---------------------------------------------------------------------------
+
+_GEO_CACHE: bytes | None = None
+
 
 def make_handler(token: str, job: SearchJob, allowed_hosts: set, claude: ClaudeJob | None = None, batch: BatchScreeningJob | None = None):
     batch = batch or BatchScreeningJob(job.out)
@@ -1046,6 +1106,15 @@ def make_handler(token: str, job: SearchJob, allowed_hosts: set, claude: ClaudeJ
                 if not target.exists() or not target.is_file():
                     return self._send(404, {"error": "arquivo não encontrado"})
                 return self._send(200, target.read_bytes(), ctype)
+            if path == "/api/geo":
+                global _GEO_CACHE
+                if _GEO_CACHE is None:
+                    geo_file = ROOT / "tools" / "painel" / "geo_data.json"
+                    if geo_file.exists():
+                        _GEO_CACHE = geo_file.read_bytes()
+                if _GEO_CACHE is not None:
+                    return self._send(200, _GEO_CACHE, "application/json; charset=utf-8")
+                return self._send(404, {"error": "dados geográficos não encontrados"})
             if path == "/api/status":
                 st = claude.status()
                 prios = priorities()
@@ -1059,7 +1128,7 @@ def make_handler(token: str, job: SearchJob, allowed_hosts: set, claude: ClaudeJ
                 screened = batch.status()["results"]
                 for r in data.get("new", []):
                     if isinstance(r, dict) and r.get("url"):
-                        r["screening"] = get_cached_score(r["url"], screened)
+                        r["screening"] = get_cached_score(r["url"], screened) or r.get("screening")
                 return self._send(200, data)
             if path == "/api/saved":
                 rows = []
@@ -1067,7 +1136,7 @@ def make_handler(token: str, job: SearchJob, allowed_hosts: set, claude: ClaudeJ
                     if s.get("url"):
                         answers = claude_answers(s["url"], claude.base)
                         pdfs = job_pdfs(s.get("company") or "", s.get("title") or "")
-                        screening = get_cached_score(s["url"], batch.results)
+                        screening = get_cached_score(s["url"], batch.results) or s.get("screening")
                         rows.append({**s, "claude": answers, **pdfs, "screening": screening})
                     else:
                         rows.append(s)
@@ -1094,6 +1163,9 @@ def make_handler(token: str, job: SearchJob, allowed_hosts: set, claude: ClaudeJ
                 return self._send(200, {"discarded": rows})
             if path == "/api/documents":
                 return self._send(200, {"documents": list_generated_documents()})
+            if path == "/api/eures/stats":
+                import eures
+                return self._send(200, eures.get_eures_stats())
             if path == "/api/settings":
                 return self._send(200, ai_providers.public_settings())
             if path == "/api/profile":
@@ -1135,11 +1207,12 @@ def make_handler(token: str, job: SearchJob, allowed_hosts: set, claude: ClaudeJ
                 all_prios = bool(body.get("all", False))
                 prios = [int(p) for p in body.get("priorities", []) if str(p).isdigit()]
                 jobage = int(body.get("jobage") or 2)
-                if not prios and not all_prios:
+                focus = str(body.get("focus") or "all")
+                if not prios and not all_prios and focus not in ("google", "europa"):
                     return self._send(400, {"error": "escolha ao menos uma prioridade"})
                 if not 1 <= jobage <= 365:
                     return self._send(400, {"error": "jobage fora de 1 a 365"})
-                if not job.start(prios, jobage, all_prios=all_prios):
+                if not job.start(prios, jobage, all_prios=all_prios, focus=focus):
                     return self._send(409, {"error": "já há uma busca em andamento"})
                 return self._send(202, {"started": True})
             if path == "/api/clear-pending":
@@ -1179,7 +1252,8 @@ def make_handler(token: str, job: SearchJob, allowed_hosts: set, claude: ClaudeJ
             if path == "/api/mark":
                 urls = [u for u in body.get("urls", []) if isinstance(u, str)]
                 try:
-                    return self._send(200, mark(load_results(job.out), urls, str(body.get("decision"))))
+                    return self._send(200, mark(load_results(job.out), urls, str(body.get("decision")),
+                                                job_data=body.get("job_data")))
                 except ValueError as exc:
                     return self._send(400, {"error": str(exc)})
             if path == "/api/upload":
@@ -1206,6 +1280,12 @@ def make_handler(token: str, job: SearchJob, allowed_hosts: set, claude: ClaudeJ
                     return self._send(500, {"error": f"não consegui gravar o .env: {exc}"})
             if path == "/api/settings/test":
                 return self._send(200, ai_providers.check_connection(str(body.get("provider") or "")))
+            if path == "/api/eures/search":
+                import eures
+                kw = str(body.get("keyword") or "Software")
+                country = str(body.get("country") or "")
+                page = int(body.get("page") or 1)
+                return self._send(200, eures.search_eures(keyword=kw, country_code=country, page=page))
             if path == "/api/batch-screen":
                 urls = [u for u in body.get("urls", []) if isinstance(u, str)]
                 if not urls:
