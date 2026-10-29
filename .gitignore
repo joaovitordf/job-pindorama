@@ -170,3 +170,6 @@ scratch/
 scratchpad/
 *.tmp
 *.bak
+
+# Benchmark & audit documents (local analysis)
+docs/BENCHMARK_CAREER_OPS_E_SKILLSPECTOR.md

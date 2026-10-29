@@ -644,10 +644,10 @@ class SearchJob:
                 return False
             self.running, self.error, self.summary = True, None, None
             self.started = datetime.now().isoformat(timespec="seconds")
-        if focus == "google":
+        if focus in ("google", "google-careers"):
             threading.Thread(target=self._run_google, daemon=True).start()
             return True
-        if focus == "europa":
+        if focus in ("europa", "eures"):
             threading.Thread(target=self._run_europa, daemon=True).start()
             return True
         cmd = [sys.executable, str(ROOT / "tools" / "scrape_run.py"), "search"]
@@ -662,6 +662,8 @@ class SearchJob:
         local_accept = scrape_run.local_target_seniority()
         if local_accept:
             cmd.extend(["--accept", ",".join(local_accept)])
+        if focus and focus != "all":
+            cmd.extend(["--portal", focus])
         threading.Thread(target=self._run, args=(cmd, focus), daemon=True).start()
         return True
 
@@ -732,14 +734,15 @@ class SearchJob:
             text = proc.stdout.decode("utf-8", errors="replace")
             err = proc.stderr.decode("utf-8", errors="replace").strip()
             eu_note = ""
-            try:
-                import eures
-                eu_jobs = eures.fetch_eures_for_panel(focus=focus, max_per_query=12)
-                if eu_jobs:
-                    added_eu = self._merge_external_jobs(eu_jobs, "eures")
-                    eu_note = f"\nEuropa (EURES): +{added_eu} vagas técnicas integradas."
-            except Exception:
-                pass
+            if focus in ("all", "europa", "eures"):
+                try:
+                    import eures
+                    eu_jobs = eures.fetch_eures_for_panel(focus=focus, max_per_query=12)
+                    if eu_jobs:
+                        added_eu = self._merge_external_jobs(eu_jobs, "eures")
+                        eu_note = f"\nEuropa (EURES): +{added_eu} vagas técnicas integradas."
+                except Exception:
+                    pass
             with self.lock:
                 base_sum = "\n".join(l for l in text.splitlines() if not l.startswith("saved="))
                 self.summary = (base_sum + eu_note).strip()
@@ -1168,6 +1171,8 @@ def make_handler(token: str, job: SearchJob, allowed_hosts: set, claude: ClaudeJ
                 return self._send(200, eures.get_eures_stats())
             if path == "/api/settings":
                 return self._send(200, ai_providers.public_settings())
+            if path == "/api/cv-areas":
+                return self._send(200, {"areas": painel_perfil.extract_cv_areas(answers_path=claude.answers)})
             if path == "/api/profile":
                 if "refresh" in self.path or not privacy_cache:
                     privacy_cache.update(painel_perfil.privacy())
@@ -1208,7 +1213,7 @@ def make_handler(token: str, job: SearchJob, allowed_hosts: set, claude: ClaudeJ
                 prios = [int(p) for p in body.get("priorities", []) if str(p).isdigit()]
                 jobage = int(body.get("jobage") or 2)
                 focus = str(body.get("focus") or "all")
-                if not prios and not all_prios and focus not in ("google", "europa"):
+                if not prios and not all_prios and focus not in ("google", "europa", "google-careers", "eures"):
                     return self._send(400, {"error": "escolha ao menos uma prioridade"})
                 if not 1 <= jobage <= 365:
                     return self._send(400, {"error": "jobage fora de 1 a 365"})

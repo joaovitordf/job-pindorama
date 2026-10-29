@@ -449,6 +449,7 @@ def main(argv=None) -> int:
     s.add_argument("--accept", default=None, help="seniority codes; default: Senioridade-alvo in CLAUDE.md")
     s.add_argument("--queries", type=Path, default=QUERIES, help="search plan file (default: public template)")
     s.add_argument("--out", type=Path, default=None, help="results file (default: system temp dir; never inside the repo)")
+    s.add_argument("--portal", default=None, help="limit search to a specific portal CLI (e.g. gupy-search)")
     s.add_argument("--workers", type=int, default=4, help="parallel CLI calls (default 4; keep it low)")
     r = sub.add_parser("record", help="append classified postings to job_scraper/seen_jobs.json")
     r.add_argument("--in", dest="infile", type=Path, required=True, help="JSON list of postings with fit/status")
@@ -484,7 +485,32 @@ def main(argv=None) -> int:
     except OSError as exc:
         print(f"scrape_run: {exc}", file=sys.stderr)
         return 2
-    if not args.all:
+    if getattr(args, "portal", None):
+        target_portal = args.portal.strip()
+        calls = [c for c in calls if c[1] == target_portal]
+        if not calls:
+            installed = installed_portals()
+            if target_portal in installed:
+                default_q = None
+                raw_queries = parse_queries(queries_file.read_text(encoding="utf-8"))
+                for _, _, cargs in raw_queries:
+                    if "-q" in cargs:
+                        default_q = cargs[cargs.index("-q") + 1]
+                        break
+                    elif "--query" in cargs:
+                        default_q = cargs[cargs.index("--query") + 1]
+                        break
+                if not default_q and LOCAL_ANSWERS.exists():
+                    try:
+                        ans = json.loads(LOCAL_ANSWERS.read_text(encoding="utf-8"))
+                        if ans.get("cargos"):
+                            default_q = ans["cargos"][0]
+                    except Exception:
+                        pass
+                if not default_q:
+                    default_q = "desenvolvedor"
+                calls = [(1, target_portal, ["-q", default_q])]
+    elif not args.all:
         wanted = {int(p) for p in args.priority.split(",") if p.strip().isdigit()}
         calls = [c for c in calls if c[0] in wanted]
     if not calls:

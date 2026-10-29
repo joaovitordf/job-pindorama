@@ -101,6 +101,31 @@ class Privacy(unittest.TestCase):
             self.assertTrue(painel_perfil.profile_ready(md))
             self.assertFalse(painel_perfil.profile_ready(Path(tmp) / "nao-existe.md"))
 
+    def test_extract_cv_areas_reads_curriculum_markdown_axes_and_dynamic_bullets(self):
+        areas = painel_perfil.extract_cv_areas()
+        self.assertGreaterEqual(len(areas), 2)
+        for a in areas:
+            self.assertTrue(a.get("id"))
+            self.assertTrue(a.get("label"))
+            self.assertIsInstance(a.get("keywords"), list)
+            self.assertGreaterEqual(len(a["keywords"]), 1)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            custom_md = Path(tmp) / "profile.md"
+            custom_md.write_text(
+                "# Perfil\n## Competências técnicas\n- **Rust & WebAssembly**: Rust, Wasm, Tokio, Actix\n",
+                encoding="utf-8",
+            )
+            custom_areas = painel_perfil.extract_cv_areas(
+                profile_md=custom_md,
+                claude_md=Path(tmp) / "missing.md",
+                answers_path=Path(tmp) / "missing.json",
+            )
+            self.assertEqual(len(custom_areas), 1)
+            self.assertEqual(custom_areas[0]["label"], "Rust & WebAssembly")
+            self.assertIn("Rust", custom_areas[0]["keywords"])
+            self.assertIn("Wasm", custom_areas[0]["keywords"])
+
 
 if __name__ == "__main__":
     unittest.main()

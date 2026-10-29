@@ -268,6 +268,17 @@ class Server(unittest.TestCase):
             parsed = json.loads(data)
             self.assertEqual(parsed["total_europe_jobs"], 1967000)
 
+    def test_cv_areas_endpoint_returns_distinct_curriculum_axes(self):
+        status, data, _ = self.request("GET", "/api/cv-areas")
+        self.assertEqual(status, 200)
+        parsed = json.loads(data)
+        self.assertIn("areas", parsed)
+        self.assertGreaterEqual(len(parsed["areas"]), 2)
+        for a in parsed["areas"]:
+            self.assertTrue(a.get("id"))
+            self.assertTrue(a.get("label"))
+            self.assertTrue(len(a.get("keywords") or []) >= 1)
+
 
 class Page(unittest.TestCase):
     def test_job_data_is_never_inserted_as_html(self):
@@ -282,6 +293,26 @@ class Page(unittest.TestCase):
         self.assertIn("function renderMapLegend", page)
         self.assertIn("isTriageMode", page)
         self.assertNotIn("Alta Afinidade (Nota 75+)", page[:page.find("<script")])
+
+    def test_smart_contextual_filters_and_cv_randomizer_ui(self):
+        page = painel.PAGE.read_text(encoding="utf-8")
+        self.assertIn('id="field-score" hidden', page)
+        self.assertIn('id="field-sort" hidden', page)
+        self.assertIn('id="btn-random-cv"', page)
+        self.assertIn('id="cv-area-badge"', page)
+        self.assertIn("function syncTriageFiltersVisibility", page)
+        self.assertIn("function nextRandomCvArea", page)
+        self.assertIn("function matchesTextFilter", page)
+        self.assertIn("function resetAllFilters", page)
+        self.assertIn('id="btn-reset-all-map-filters"', page)
+
+    def test_russia_portals_in_search_focus_and_geo(self):
+        page = painel.PAGE.read_text(encoding="utf-8")
+        self.assertIn('value="hh-search"', page)
+        self.assertIn('value="habrcareer-search"', page)
+        self.assertIn('"hh-search": "HeadHunter (hh.ru)"', page)
+        self.assertIn('"habrcareer-search": "Habr Career"', page)
+        self.assertIn('code: "RU"', page)
 
 
 if __name__ == "__main__":

@@ -9,8 +9,10 @@ O painel de controle do `job-pindorama` (`tools/painel.py` e `tools/painel/index
    - Proibição absoluta de sinks perigosos de injeção (`innerHTML`, `outerHTML`, `document.write`, `eval`). Todo nó de dado é inserido via `textContent`, `setAttribute`, `replaceChildren` ou `document.createElement`.
 3. **Proteção Anti-CSRF:**
    - Token secreto aleatório de sessão injetado na tag `<meta name="painel-token">` e exigido em todas as mutações (`POST`) via cabeçalho `X-Painel-Token`.
-4. **Respeito à Privacidade e Whitelabel:**
-   - Nenhum dado pessoal da pessoa candidata (CPF, RG, e-mail, telefone, endereço) é rastreado ou versionado. Todos os dados permanecem estritamente locais no computador da pessoa candidata, validados por `tools/check_privacy.py`.
+4. **Respeito à Privacidade e Whitelabel (100% Apropriável):**
+   - A interface e os scrapers não contêm termos ou áreas fixas (hardcoded) específicas de um único candidato.
+   - Todo dado e sugestão de palavras-chave é inferido dinamicamente a partir dos arquivos Markdown do perfil (`cv.md`, `CLAUDE.md`) ou `respostas.json`.
+   - Nenhum dado pessoal da pessoa candidata é versionado no Git, mantendo conformidade com `tools/check_privacy.py`.
 
 ---
 
@@ -18,7 +20,11 @@ O painel de controle do `job-pindorama` (`tools/painel.py` e `tools/painel/index
 
 A interface organiza-se em um fluxo de trabalho progressivo:
 - **Buscar e Vagas (Aba Unificada):**
-  - **Console de Filtros:** Termo de busca, modelo (remoto/híbrido/presencial), portal, região (Brasil/Europa/Global), nota de triagem, ordenação e publicação recente.
+  - **Console de Filtros Inteligentes:**
+    - **Input com Randomizador do CV:** Botão integrado com ícone de dados (🎲) para alternar e sugerir termos técnicos extraídos dinamicamente do currículo da pessoa usuária.
+    - **Filtro Textual Abrangente:** O filtro de texto busca simultaneamente em título, empresa, localização, descrição completa da vaga, habilidades requeridas e tags associadas.
+    - **Filtro de Nota Reativo:** O seletor de "Nota de Aderência (Fit IA)" ajusta-se automaticamente após o processo de triagem com IA.
+    - **Reset Inteligente:** Empty-state cards intuitivos com botão "Limpar filtros" quando uma busca combinada não retorna vagas.
   - **Subaba 1 — Mapa Mundial & Estatísticas da Busca:**
     - Visualização interativa cartográfica do Mundo e do Brasil.
     - Badges com contagem de vagas e notas de triagem.
@@ -46,6 +52,7 @@ A interface organiza-se em um fluxo de trabalho progressivo:
 | `GET` | `/api/saved` | Vagas marcadas como "Me interessa" com notas e PDFs associados |
 | `GET` | `/api/geo` | Dados vetoriais SVG do Brasil (27 UFs) e Mundo (172 países) |
 | `GET` | `/api/eures/stats` | Estatísticas oficiais do mercado de trabalho europeu (EURES) |
+| `GET` | `/api/profile` | Retorna metadados e termos de busca dinâmicos do perfil do usuário |
 | `POST` | `/api/search` | Dispara busca em segundo plano nos portais configurados |
 | `POST` | `/api/batch-screen` | Dispara triagem em lote assíncrona das vagas selecionadas |
 | `POST` | `/api/mark` | Marca vaga como "Me interessa" ou "Descartar" |

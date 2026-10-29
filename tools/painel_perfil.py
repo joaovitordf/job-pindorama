@@ -225,3 +225,129 @@ def profile_ready(claude_md: Path = ROOT / "CLAUDE.md") -> bool:
         return "[YOUR_NAME]" not in claude_md.read_text(encoding="utf-8")
     except OSError:
         return False
+
+
+# ---------------------------------------------------------------------------
+# Áreas do Currículo (.md) para o Randomizador de Busca
+# ---------------------------------------------------------------------------
+
+def extract_cv_areas(
+    profile_md: Path = PROFILE_MD,
+    claude_md: Path = ROOT / "CLAUDE.md",
+    answers_path: Path = ANSWERS,
+) -> list[dict]:
+    """Extrai áreas/eixos técnicos de qualquer currículo (.md) de forma 100% dinâmica (whitelabel)."""
+    chunks = []
+    for p in (profile_md, claude_md):
+        try:
+            if p and p.exists():
+                chunks.append(p.read_text(encoding="utf-8"))
+        except OSError:
+            pass
+    raw_md = "\n".join(chunks)
+
+    areas: list[dict] = []
+    seen_labels: set[str] = set()
+
+    # 1. Extrai tópicos explícitos de competências: "- **Categoria**: item1, item2, item3"
+    current_section = ""
+    for line in raw_md.splitlines():
+        if line.startswith("#"):
+            current_section = line.strip("# ").strip().lower()
+            continue
+        if any(skip in current_section for skip in ("projeto", "checklist", "deal-breakers", "filtro", "estrutura", "fluxo", "privacidade", "identidade", "documento", "diretriz", "publica", "premio", "referencia")):
+            continue
+        m = re.match(r"^\s*-\s*\*\*([^*]{2,55})\*\*[^:]*:\s*(.+)$", line)
+        if not m:
+            continue
+        cat_label = m.group(1).strip()
+        cat_low = cat_label.lower()
+        if any(skip in cat_low for skip in (
+            "nome", "local", "telefone", "e-mail", "linkedin", "github", "situação",
+            "restrições", "gênero", "cnpj", "razão", "cnae", "endereço", "comprovante",
+            "idioma", "cv language", "senioridade", "título", "pessoa jurídica",
+            "foco", "orientação", "pontos", "rende", "português", "inglês", "espanhol", "deal",
+        )):
+            continue
+        raw_items = [re.sub(r"\([^)]*\)", "", x).strip(" .;:") for x in re.split(r"[,;]", m.group(2))]
+        items = [x for x in raw_items if 2 <= len(x) <= 35 and not x.endswith(")")]
+
+        # Subtermos da própria categoria (ex: Java, Python, TypeScript)
+        cat_terms = [
+            w for w in re.split(r"[/, &]+", cat_label)
+            if len(w) >= 3 and w.lower() not in (
+                "outros", "gerais", "principais", "secundarias", "secundárias",
+                "dominio", "domínio", "softwares", "ferramentas", "bancos", "cache", "infra", "devops"
+            )
+        ]
+
+        kws = []
+        for term in (cat_terms + items):
+            t_clean = term.strip("()[] ")
+            if t_clean and t_clean.lower() not in [k.lower() for k in kws]:
+                kws.append(t_clean)
+
+        if kws and cat_label not in seen_labels:
+            seen_labels.add(cat_label)
+            slug = re.sub(r"[^a-z0-9]+", "-", cat_low).strip("-") or f"area-{len(areas)+1}"
+            areas.append({
+                "id": slug,
+                "label": cat_label,
+                "keywords": kws[:6],
+            })
+
+    # 2. Extrai das experiências profissionais: "### Cargo - Empresa"
+    current_section = ""
+    for line in raw_md.splitlines():
+        if line.startswith("#"):
+            current_section = line.strip("# ").strip().lower()
+            continue
+        if "experi" not in current_section:
+            continue
+        m = re.match(r"^\s*###\s+([^-—(]+?)\s*[-—]\s*([^(]+?)(?:\s*\(.*\))?$", line)
+        if not m:
+            continue
+        role_label = m.group(1).strip()
+        role_low = role_label.lower()
+        if len(role_label) >= 3 and role_label not in seen_labels and not any(skip in role_low for skip in ("identidade", "formação", "projetos", "certificações", "publicações", "prêmios")):
+            seen_labels.add(role_label)
+            slug = re.sub(r"[^a-z0-9]+", "-", role_low).strip("-") or f"area-{len(areas)+1}"
+            terms = [w for w in re.split(r"[\s/]+", role_label) if len(w) >= 3 and w.lower() not in ("desenvolvedor", "estagiário", "estagiario", "analista", "engenheiro", "junior", "pleno", "senior")]
+            keywords = [role_label] + terms
+            areas.append({
+                "id": slug,
+                "label": role_label,
+                "keywords": keywords[:5],
+            })
+
+    # 3. Lê respostas.json para cargos e competências de busca declaradas pelo usuário
+    ans = load_answers(answers_path)
+    if ans:
+        cargos = ans.get("cargos") or []
+        comp = ans.get("competencias_busca") or []
+        for c in cargos:
+            if c and c not in seen_labels:
+                seen_labels.add(c)
+                slug = re.sub(r"[^a-z0-9]+", "-", c.lower()).strip("-") or f"area-{len(areas)+1}"
+                kws = [c] + [x for x in comp if x.lower() in c.lower() or len(x) <= 25][:4]
+                areas.append({
+                    "id": slug,
+                    "label": c,
+                    "keywords": kws[:5],
+                })
+        if comp and "competencias-gerais" not in seen_labels:
+            seen_labels.add("competencias-gerais")
+            areas.append({
+                "id": "competencias-gerais",
+                "label": "Competências do Perfil",
+                "keywords": comp[:6],
+            })
+
+    if not areas:
+        areas.append({
+            "id": "perfil-geral",
+            "label": "Oportunidades do Perfil",
+            "keywords": ["Vagas", "Oportunidades"],
+        })
+
+    return areas

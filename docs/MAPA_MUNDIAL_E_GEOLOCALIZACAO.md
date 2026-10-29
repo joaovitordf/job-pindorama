@@ -11,7 +11,7 @@ O módulo de geolocalização do `job-pindorama` integra visualização cartogr�
 ### 2.1 Dados Cartográficos (`tools/painel/geo_data.json`)
 - Contém a definição vetorial compactada (caminhos SVG e centroides) de:
   - **Brasil (27 UFs):** SP, RJ, MG, RS, PR, SC, BA, DF, etc.
-  - **Mundo (172 países):** Códigos ISO-2 (BR, US, DE, NL, PT, GB, CA, etc.).
+  - **Mundo (172 países):** Códigos ISO-2 (BR, US, DE, NL, PT, GB, CA, RU, etc.).
 - Não depende de bibliotecas externas pesadas (como Leaflet, Google Maps ou D3), garantindo execução local rápida, offline e com conformidade estrita com a política de Content Security Policy (`CSP`).
 
 ### 2.2 Endpoint de Geometria (`GET /api/geo`)
@@ -28,8 +28,9 @@ A função `resolveGeo` no cliente normaliza a localização informada em cada v
    - `GLOBAL_REMOTE`: Remoto Internacional / Global
 2. **Polos Brasileiros (UFs e Cidades):**
    - Identifica siglas de estado e principais cidades (ex: São Paulo, Campinas, Belo Horizonte, Curitiba, Porto Alegre, Salvador, etc.).
-3. **Países Estrangeiros:**
+3. **Países Estrangeiros e Eurásia:**
    - Mapeia termos internacionais e países da rede EURES/Américas/Ásia para suas respectivas siglas ISO-2.
+   - **Rússia e Eurásia (`RU`):** Mapeamento nativo para vagas vindas do HeadHunter e Habr Career (`Moscou`, `São Petersburgo`, `Novosibirsk`, `Russia`, etc.).
 
 ---
 
