@@ -26,6 +26,7 @@ import tempfile
 import time
 import urllib.error
 import urllib.request
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -38,6 +39,7 @@ ROOT = Path(__file__).resolve().parent.parent
 ENV_PATH = ROOT / ".env"
 
 AUTO = "auto"
+DEFAULT_PROVIDER = "openai"  # Codex CLI / OpenAI é o motor principal deste projeto.
 OPENAI_DEFAULT_BASE = "https://api.openai.com/v1"
 MAX_OUTPUT_TOKENS = 8192
 RETRY_DELAYS = (2, 6)  # segundos antes da 2ª e da 3ª tentativa (429 e 5xx)
@@ -46,7 +48,7 @@ MAX_ARGV_CHARS = 28_000 if os.name == "nt" else 120_000
 
 SPECS: dict[str, dict[str, Any]] = {
     "openai": {
-        "label": "OpenAI (ChatGPT)", "short": "ChatGPT", "aliases": ("gpt", "codex", "chatgpt"),
+        "label": "Codex / OpenAI", "short": "Codex", "aliases": ("gpt", "codex", "chatgpt"),
         "key_var": "OPENAI_API_KEY", "model_var": "OPENAI_MODEL", "default_model": "gpt-4o-mini",
         "base_var": "OPENAI_BASE_URL",
         "suggested": ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini", "o3-mini"],
@@ -73,6 +75,21 @@ KEY_RE = re.compile(r"^[A-Za-z0-9_\-.=+/]{8,400}$")
 
 class ProviderError(RuntimeError):
     """Falha ao falar com o provedor; a mensagem já é segura para mostrar na tela."""
+
+
+@contextmanager
+def _cli_tempdir():
+    """Cria uma pasta de trabalho do CLI e nunca transforma limpeza em erro de geração."""
+    path = tempfile.mkdtemp(prefix="pindorama_ia_")
+    try:
+        yield path
+    finally:
+        try:
+            shutil.rmtree(path, ignore_errors=True)
+        except OSError:
+            # No Windows, um arquivo auxiliar do CLI pode permanecer bloqueado
+            # por alguns instantes. A pasta é temporária e será limpa depois.
+            pass
 
 
 # ---------------------------------------------------------------------------
@@ -229,7 +246,42 @@ class Provider:
     def _find_cli(self) -> str | None:
         bin_names = {"openai": "codex", "claude": "claude", "gemini": "agy"}
         cmd = bin_names.get(self.name)
-        return shutil.which(cmd) if cmd else None
+        if not cmd:
+            return None
+
+        found = shutil.which(cmd)
+        if found:
+            return found
+
+        # O Codex para Windows pode estar instalado numa pasta versionada do
+        # OpenAI e essa pasta nem sempre chega ao PATH de processos iniciados
+        # por duplo clique (como abrir-painel.bat). Procure apenas os locais
+        # conhecidos, sem executar nenhum arquivo durante a descoberta.
+        if self.name != "openai":
+            return None
+        configured = _setting(self.env, "CODEX_BIN")
+        if configured and Path(configured).is_file():
+            return configured
+        if os.name != "nt":
+            return None
+
+        roots: list[Path] = []
+        for raw_root in (os.environ.get("LOCALAPPDATA"), str(Path.home() / "AppData" / "Local")):
+            if raw_root:
+                roots.append(Path(raw_root) / "OpenAI" / "Codex" / "bin")
+
+        candidates: list[Path] = []
+        for root in dict.fromkeys(roots):
+            for name in ("codex.exe", "codex.cmd"):
+                direct = root / name
+                if direct.is_file():
+                    candidates.append(direct)
+            if root.is_dir():
+                for pattern in ("*/codex.exe", "*/codex.cmd"):
+                    candidates.extend(path for path in root.glob(pattern) if path.is_file())
+        if not candidates:
+            return None
+        return str(max(candidates, key=lambda path: path.stat().st_mtime))
 
     @property
     def custom_endpoint(self) -> bool:
@@ -263,8 +315,8 @@ class Provider:
         mode = self.mode
         if mode == "none":
             raise ProviderError(
-                f"{self.spec['label']} não está configurado: abra a aba Configurações e informe a chave de API, "
-                f"ou instale e entre no {self.spec['cli']}.")
+                f"{self.spec['label']} não está configurado: copie .env.example para .env, abra a aba "
+                f"Configurações e informe a chave de API, ou instale e entre no {self.spec['cli']}.")
         if mode == "cli":
             return self._generate_cli(prompt, system_instruction, timeout)
         if not MODEL_RE.match(self.model):
@@ -293,7 +345,10 @@ class Provider:
             cmd = [self.cli_bin, "-p"]
         # Pasta vazia: o agente não enxerga nem herda as permissões deste projeto. O pedido
         # contém texto de terceiros (a vaga) e não pode virar uma instrução com acesso aos arquivos.
-        with tempfile.TemporaryDirectory(prefix="pindorama_ia_") as cwd:
+        # O Codex CLI no Windows pode manter um arquivo auxiliar aberto por alguns
+        # instantes depois de devolver a resposta. A limpeza estrita da pasta
+        # temporária transformava uma resposta válida em erro WinError 5.
+        with _cli_tempdir() as cwd:
             try:
                 proc = subprocess.run(cmd, input=stdin, capture_output=True, cwd=cwd, timeout=timeout,
                                       env={**os.environ, "PYTHONIOENCODING": "utf-8"})
@@ -390,21 +445,26 @@ def normalize_provider(value: str | None) -> str:
 
 
 def get_ai_provider(env: dict[str, str] | None = None) -> Provider | UnconfiguredProvider:
-    """O provedor escolhido em Configurações; no automático, o primeiro com chave, depois com CLI."""
+    """O provedor escolhido em Configurações; sem escolha, Codex/OpenAI é o padrão."""
     env = load_env_file() if env is None else env
     providers = {pid: Provider(pid, env) for pid in PROVIDER_IDS}
-    requested = normalize_provider(_setting(env, "AI_PROVIDER"))
-    if requested != AUTO:
-        return providers[requested]
-    for pid in PROVIDER_IDS:
-        if providers[pid].mode == "api_key":
+    configured = _setting(env, "AI_PROVIDER")
+    if configured:
+        requested = normalize_provider(configured)
+        if requested != AUTO:
+            return providers[requested]
+    elif providers[DEFAULT_PROVIDER].is_available():
+        return providers[DEFAULT_PROVIDER]
+
+    # Modo automático ou sem escolha explícita: priorize o Codex/OpenAI, depois outros configurados.
+    auto_order = (DEFAULT_PROVIDER,) + tuple(pid for pid in PROVIDER_IDS if pid != DEFAULT_PROVIDER)
+    for pid in auto_order:
+        if providers[pid].mode != "none":
             return providers[pid]
-    for pid in PROVIDER_IDS:
+    for pid in auto_order:
         if providers[pid].is_available():
             return providers[pid]
-    return UnconfiguredProvider(env)
-
-
+    return providers[DEFAULT_PROVIDER]
 # ---------------------------------------------------------------------------
 # Tela de configurações
 # ---------------------------------------------------------------------------
@@ -429,7 +489,7 @@ def public_settings(env: dict[str, str] | None = None) -> dict:
             "supports_base_url": "base_var" in p.spec,
         })
     return {
-        "provider": normalize_provider(_setting(env, "AI_PROVIDER")),
+        "provider": normalize_provider(_setting(env, "AI_PROVIDER")) if _setting(env, "AI_PROVIDER") else DEFAULT_PROVIDER,
         "consent": _setting(env, "AI_DATA_CONSENT").lower() in ("1", "true", "yes", "sim"),
         "active": active.get_info(),
         "providers": rows,
